@@ -61,9 +61,6 @@ Route::post('/delete_video', [FrontCardController::class, 'delete_video'])->name
 Route::get('/card_editor/{card_id}/{card_size_id}', [FrontCardController::class, 'card_editor'])->name('card_editor');
 Route::post('/post_card', [FrontCardController::class, 'post_card'])->name('post_card');
 Route::get('/cart_continue', [FrontCardController::class, 'cart_continue'])->name('cart_continue');
-Route::get('/cart', [FrontCardController::class, 'cart_page'])->name('cart_page');
-Route::post('/post_cart', [FrontCardController::class, 'post_cart'])->name('post_cart');
-Route::get('/cart_table', [FrontCardController::class, 'cart_table_show_data'])->name('cart_table');
 
 Route::get('/registration', [CustomerController::class, 'index'])->name('registration');
 Route::post('/submitUser', [CustomerController::class, 'submitUser'])->name('submitUser');
@@ -80,9 +77,21 @@ Route::group(['prefix' => 'user', 'middleware' => 'customer_auth'], function () 
 	Route::post('/postuser_ChangePassword', [CustomerController::class, 'postuser_ChangePassword'])->name('postuser_ChangePassword');
 	Route::get('/user_order', [CustomerController::class, 'user_order'])->name('user_order');
 	Route::get('/user_favourites', [CustomerController::class, 'user_favourites'])->name('user_favourites');
-
+	Route::get('/order_detail/{order_id}', [CustomerController::class, 'order_detail'])->name('order_detail');
+	Route::get('/favourites_delete', [CustomerController::class, 'favourites_delete'])->name('favourites_delete');
 	Route::get('/front_logout', [CustomerController::class, 'front_logout'])->name('front_logout');
 });
+
+Route::group(['prefix' => '', 'middleware' => 'customer_auth'], function () {
+	Route::get('/cart', [FrontCardController::class, 'cart_page'])->name('cart_page');
+	Route::get('/delete_cart_item', [FrontCardController::class, 'delete_cart_item'])->name('delete_cart_item');
+	Route::post('/post_cart', [FrontCardController::class, 'post_cart'])->name('post_cart');
+	Route::get('/cart_table', [FrontCardController::class, 'cart_table_show_data'])->name('cart_table');
+	Route::get('/cart_data', [FrontCardController::class, 'cart_data'])->name('cart_data');
+	Route::get('/checkout/', [FrontCardController::class, 'checkout'])->name('checkout');
+	Route::post('/post_checkout', [FrontCardController::class, 'post_checkout'])->name('post_checkout');
+	Route::get('/order_status/{order_id}', [FrontCardController::class, 'order_status'])->name('order_status');
+});	
 //Admin Module
 
 Route::get('/admin', [AuthController::class, 'index'])->name('login');
@@ -104,7 +113,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 	Route::post('/add-customer', [UserController::class, 'AddCustomerPost'])->name('add-customer.post');
 	Route::get('/edit-customer/{id}', [UserController::class, 'EditUser'])->name('edit-customer');
 	Route::post('/edit-customer/{id}', [UserController::class, 'UpdateCustomer'])->name('edit-customer-post');
-	Route::get('/delete-customer/{id}', [UserController::class, 'deleteCustomer'])->name('delete-customer-post');
+	Route::post('/delete-customer', [UserController::class, 'deleteCustomer'])->name('delete-customer-post');
 	Route::post('/user-status-change',[UserController::class,'User_status_change'])->name('user.status.change');
 
 
@@ -223,6 +232,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 	Route::get('/payment-list', [PaymentController::class, 'index'])->name('paymentlist');
 	Route::get('/getpaymenttranslist', [PaymentController::class, 'GetPaymentTranslist'])->name('get.paymentranstlist');
     Route::get('/view-payment-detail/{id}', [PaymentController::class, 'show'])->name('view.payment.detail');
-
+	Route::get('/view-payment-invoice/{id}', [PaymentController::class, 'Payment_Invoice'])->name('view.payment.invoice');
 
 });

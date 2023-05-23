@@ -16,7 +16,25 @@ class OrderController extends Controller
      */
     public function index()
     {
-     return view("Admin.order_management.order_list");
+    $data['orderList'] =  DB::table('order')
+                        ->leftJoin('users AS u','u.id','=','order.customer_id')
+                        ->leftJoin('order_details AS detail','detail.order_id','=','order.order_id')
+                        ->leftJoin('cards AS card','card.id','=','detail.card_id')
+                        ->leftJoin('card_sizes AS size','size.id','=','detail.card_size_id')
+                        ->select('order.*','card.card_title','card.price')
+                        ->orderby('order.id','DESC')
+                        // ->groupBy('order.id')
+                        ->get();
+
+    // DB::table("order")
+
+    // ->select("order.*","order_details.*",'card.card_title')
+    // ->leftJoin("order_details","order_details.order_id","=","order.order_id")
+    // ->leftJoin('cards AS card','card.id','=','order_details.card_id')
+    // ->orderby('order.id','DESC')
+    // ->groupBy('order.id')->get();
+     
+     return view("Admin.order_management.order_list")->with($data);
     }
 
     /**
@@ -50,11 +68,14 @@ class OrderController extends Controller
     {
         $orderdetail = DB::table('order')
                     ->leftJoin('users AS u','u.id','=','order.customer_id')
-                    ->leftJoin('cards AS card','card.id','=','order.card_id')
-                    ->select('order.*','card.card_title','card.price','u.email','u.phone')
+                    ->leftJoin('order_details AS detail','detail.order_id','=','order.order_id')
+                    ->leftJoin('cards AS card','card.id','=','detail.card_id')
+                    ->leftJoin('card_sizes AS size','size.id','=','detail.card_size_id')
+                    ->select('order.*','card.card_title','card.price','size.*','detail.qty as card_qty')
                     ->where('order.id',$id)
                     ->get(); 
-       $admindata=Auth::user();
+                    
+       $admindata = Auth::user();
                  
      return view("Admin.order_management.order_details",compact('orderdetail','admindata'));
     }
@@ -93,9 +114,10 @@ class OrderController extends Controller
         //
     }
 
-    // Get order list
+    // Get order list by ajax
     public function getOrderList(Request $request)
     {
+        // dd( $request->get('status_id'));
         $totalFilteredRecord = $totalDataRecord = $draw_val = "";
         $columns_list = array(
         0 =>'id',
@@ -117,10 +139,38 @@ class OrderController extends Controller
         $start_val = $request->input('start');
         $order_val = $columns_list[$request->input('order.0.column')];
         $dir_val = $request->input('order.0.dir');
-            
-        if(empty($request->input('search.value')))
+
+       // Custom search filter 
+        $Stausid = $request->get('status_id');
+        
+        if( $Stausid != null)
         {
-   
+            $search_text = $request->input('search.value');
+            $order_data  = DB::table('order')
+                            ->leftJoin('users AS u','u.id','=','order.customer_id')
+                            ->leftJoin('cards AS card','card.id','=','order.card_id')
+                            ->select('order.*','card.card_title','card.price')
+                            ->where('order.order_status',$Stausid)
+                            ->where(function ($query) use ($search_text) {
+                                $query->where('order.order_id', 'LIKE',"%{$search_text}%")
+                                ->orWhere('order.fname', 'LIKE',"%{$search_text}%")
+                                ->orWhere('order.lname', 'LIKE',"%{$search_text}%")
+                                ->orWhere('order.customer_id', 'LIKE',"%{$search_text}%")
+                                ->orWhere('card.price', 'LIKE',"%{$search_text}%")
+                                ->orWhere('order.order_status', 'LIKE',"%{$search_text}%")
+                                ->orWhere('card.card_title', 'LIKE',"%{$search_text}%");
+                                })
+                            ->offset($start_val)
+                            ->limit($limit_val)
+                            ->orderBy('order.id', 'ASC')
+                            // ->orderBy($order_val,$dir_val)
+                            ->get();
+
+
+            $totalFilteredRecord =  $order_data->count();
+        }     
+        elseif(empty($request->input('search.value')))
+        {
         $order_data  = DB::table('order')
                         ->leftJoin('users AS u','u.id','=','order.customer_id')
                         ->leftJoin('cards AS card','card.id','=','order.card_id')
@@ -129,8 +179,7 @@ class OrderController extends Controller
                         ->limit($limit_val)
                         ->orderBy('order.id', 'ASC')
                         // ->orderBy($order_val,$dir_val)
-                        ->get();   
-        
+                        ->get();                          
         }
         else {
         $search_text = $request->input('search.value');
@@ -147,7 +196,7 @@ class OrderController extends Controller
         }else{
             $search_text = 4;
         }
-
+        // echo "3";
         $order_data = DB::table('order')
                         ->leftJoin('users AS u','u.id','=','order.customer_id')
                         ->leftJoin('cards AS card','card.id','=','order.card_id')
@@ -167,25 +216,7 @@ class OrderController extends Controller
                         // ->orderBy($order_val,$dir_val)
                         ->get();
 
-        $totalFilteredRecord = DB::table('order')
-                            ->leftJoin('users AS u','u.id','=','order.customer_id')
-                            ->leftJoin('cards AS card','card.id','=','order.card_id')
-                            ->select('order.*','card.card_title','card.price')
-                            ->where(function ($query) use ($search_text) {
-                                $query->where('order.order_id', 'LIKE',"%{$search_text}%")
-                                ->orWhere('order.fname', 'LIKE',"%{$search_text}%")
-                                ->orWhere('order.lname', 'LIKE',"%{$search_text}%")
-                                ->orWhere('order.customer_id', 'LIKE',"%{$search_text}%")
-                                ->orWhere('card.price', 'LIKE',"%{$search_text}%")
-                                ->orWhere('order.order_status', 'LIKE',"%{$search_text}%")
-                                ->orWhere('card.card_title', 'LIKE',"%{$search_text}%");
-                                })
-                            ->offset($start_val)
-                            ->limit($limit_val)
-                            ->orderBy('order.id', 'ASC')
-                            // ->orderBy($order_val,$dir_val)
-                            ->count();
-
+        $totalFilteredRecord = $order_data->count();
         }
             
         $data_val = array();
@@ -352,7 +383,7 @@ class OrderController extends Controller
 
         }
      
-     return back()->with("success", "Status Changed Successfully!");
+     return back()->with("success", "Status Changed Successfully");
 
     }
 

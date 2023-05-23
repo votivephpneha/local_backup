@@ -80,14 +80,53 @@
                     <table id="example" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Id#</th>
+                          <!-- <th>Id#</th> -->
                           <th>S.no#</th>
                           <th>Text message</th>
                           <th>Status</th>
                           <th>Action</th>
                         </tr>
                       </thead>
-                      
+                      <tbody>
+                              @if (!$messlist->isEmpty())
+                              <?php $i = 1; ?>
+                              @foreach ($messlist as $arr)
+                              <tr id="row{{ $arr->id }}">
+                                  <td>{{$i}}</td>
+                                  <td>{{$arr->text_message}}</td>
+                                  <td class="mess_status">
+                                    @if($arr->status == "Active")
+                                      <div class="changediv{{$arr->id}} status-change"><button
+                                              type="button"
+                                              class="btn btn-success change-status{{$arr->id}}"
+                                              onClick="MessStatusChange('{{$arr->id}}')">{{$arr->status}}</button>
+                                      </div>
+                                      @else
+                                      <div class="changediv{{$arr->id}} status-change"><button
+                                              type="button"
+                                              class="btn btn-danger change-status{{$arr->id}}"
+                                              onClick="MessStatusChange('{{$arr->id}}')">{{$arr->status}}</button>
+                                      </div>
+                                    @endif
+                                  </td>
+                                  <td>
+                                  <button class="btn btn-dark p-2">
+                                  <a href="{{route('edit.message',[$arr->id])}}" class="text-white"
+                                      style=" color: #FFFFFF;"><i
+                                          class="fa fa-edit"></i>Edit</button></a>
+
+                                  <button class="btn  btn-dark p-2">
+                                  <a href="javascript:void(0);" onClick="delete_message('{{$arr->id}}')"
+                                      data-id="{{$arr->id}}"
+                                      class="text-white delete-text-mess{{$arr->id}}"
+                                      style=" color: #FFFFFF;"><i class="fa fa-trash-o"></i>
+                                      Delete </button></a>
+                                  </td>
+                              </tr>
+                              <?php $i++; ?>
+                              @endforeach
+                              @endif
+                          </tbody>
                     </table>
                   </div>
                 </div>
@@ -110,116 +149,138 @@
     @include('Admin.layout.datatable_script')
 
    <script>
-    $(document).ready(function () {
-    $('#example').DataTable({
-      processing: true,
-      serverSide: true,
-      "lengthMenu": [
-          [10, 20, 50, 100, 500],
-          [10, 20, 50, 100, 500]
-      ],
+  //   $(document).ready(function () {
+  //   $('#example').DataTable({
+  //     processing: true,
+  //     serverSide: true,
+  //     "lengthMenu": [
+  //         [10, 20, 50, 100, 500],
+  //         [10, 20, 50, 100, 500]
+  //     ],
 
-      pageLength: 10,
-      "order": [
-          [0, "desc"],
-          [0, 'desc']
-      ],
+  //     pageLength: 10,
+  //     "order": [
+  //         [0, "desc"],
+  //         [0, 'desc']
+  //     ],
 
-      ajax: '{{route("get.messagelist")}}',
+  //     ajax: '{{route("get.messagelist")}}',
       
-      "columns": [
-              {
-                "data": "id",
-                "name": 'id',
-                "searchable": false,
-                "visible": false
-              },
-              {
-                "data": "srno",
-                name: 'srno',
-                searchable: false,
-                orderable: false
-              },
+  //     "columns": [
+  //             {
+  //               "data": "id",
+  //               "name": 'id',
+  //               "searchable": false,
+  //               "visible": false
+  //             },
+  //             {
+  //               "data": "srno",
+  //               name: 'srno',
+  //               searchable: false,
+  //               orderable: false
+  //             },
               
-              {
-                "data": "textmessage",
-                orderable: false                
-              },
+  //             {
+  //               "data": "textmessage",
+  //               orderable: false                
+  //             },
         
-              {
-                "data": "status",
-                orderable: false
-              },
-              {
-                "data": "action",
-                orderable: false
-              }
+  //             {
+  //               "data": "status",
+  //               orderable: false
+  //             },
+  //             {
+  //               "data": "action",
+  //               orderable: false
+  //             }
 
-              ],
+  //             ],
 
-              "rowId": "id",
+  //             "rowId": "id",
+  //   });
+  //  });
+   
+  $(document).ready(function() {
+    $('#example').DataTable({
+        'columnDefs': [ {
+               'targets': [], // column index (start from 0)
+               'orderable': false, // set orderable false for selected columns
+         }]
     });
-   });
-
+  });
 
   //  delete card
-   function delete_message(id){
-      if(confirm('Are you sure delete this text message ?')){
-         var messid = $('.delete-text-mess'+ id).data('id');
+  function delete_message(id) {
+    toastDelete.fire({}).then(function(e) {
+        if (e.value === true) {
+            var messid = $('.delete-text-mess' + id).data('id');
 
             $.ajax({
-            type: 'post',
-            url: "{{ route('delete.message.post') }}",
-            data: {
-              _token : "{{csrf_token()}}",
-                 'id' : messid
+                type: 'post',
+                url: "{{ route('delete.message.post') }}",
+                data: {
+                    _token: "{{csrf_token()}}",
+                    'id': messid
 
-            },
-            success: function(data) {            
-                  location.reload();              
-            }
-         });
-      }
-   };
+                },
+                success: function(data) {
+                const obj = JSON.parse(data);
+                console.log(obj.msg);
+                $("#row" + id).remove();
+                success_noti(obj.msg);
+                }
+            });
+            // }
+        } else {
 
-  //Active Inactive status change 
-  function MessStatusChange(id){
-   var Statusvalue =  $(".change-status" +id).text();
-   console.log(Statusvalue);
-    
-   if(Statusvalue == 'Active'){
-     Statusvalue = "Inactive";
-   }else{
-    Statusvalue = "Active";
-   }
-   $.ajax({
-    type: 'post',
-    url: "{{ route('mess.status.change') }}",
-    data: {
-      _token : "{{csrf_token()}}",
-          'mess_id' : id,
-          'status' : Statusvalue
-    },
-    success: function(data) {            
-      $('#sumess').fadeIn().html('<div class="alert alert-success alert-block">' +
-                '<button type="button" class="close" data-dismiss="alert">×</button>' +
-                '<strong>' + data + '</strong>' +
-                '</div>');
+            e.dismiss;
 
-      setTimeout(function() {
-        $('#sumess').fadeOut("slow");
-        }, 300 );
-  
-      if(Statusvalue == 'Active'){        
-      $('.changediv' +id).html('<span class="label label-success change-status'+id+'"  onClick="MessStatusChange('+id+')">'+Statusvalue+'</span>' ).fadeIn('slow');
-      }else{
-        $('.changediv'+id).html('<span class="label label-danger change-status'+id+'"  onClick="MessStatusChange('+id+')">'+Statusvalue+'</span>' ).fadeIn('slow');
-      }
-      
+        }
+    }, function(dismiss) {
+
+        return false;
+
+    });
+};
+
+//Active Inactive status change 
+function MessStatusChange(id) {
+    var Statusvalue = $(".change-status" + id).text();
+    console.log(Statusvalue);
+
+    if (Statusvalue == 'Active') {
+        Statusvalue = "Inactive";
+    } else {
+        Statusvalue = "Active";
     }
+    $.ajax({
+        type: 'post',
+        url: "{{ route('mess.status.change') }}",
+        data: {
+            _token: "{{csrf_token()}}",
+            'mess_id': id,
+            'status': Statusvalue
+        },
+        success: function(data) {
+            // $('#sumess').fadeIn().html('<div class="alert alert-success alert-block">' +
+            //     '<button type="button" class="close" data-dismiss="alert">×</button>' +
+            //     '<strong>' + data + '</strong>' +
+            //     '</div>');
+
+            // setTimeout(function() {
+            //     $('#sumess').fadeOut("slow");
+            // }, 300);
+            success_noti(data);
+            if (Statusvalue == 'Active') {
+                $('.changediv' + id).html('<button type="button" class="btn btn-success change-status' + id + '"  onClick="MessStatusChange(' + id + ')" >' + Statusvalue + '</button>');
+            } else {
+                $('.changediv' + id).html('<button type="button" class="btn btn-danger change-status' + id + '"  onClick="MessStatusChange(' + id + ')" >' + Statusvalue + '</button>');
+            }
+
+        }
     });
 
-  }
+}
    </script>
 
   </body>

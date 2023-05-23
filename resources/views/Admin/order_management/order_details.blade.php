@@ -17,8 +17,8 @@ $('#order_status').on('change', function() {
 
     if (val == 2) {
         $('#cancel_area').html(
-            '<textarea style="width: 337px;" class="form-control animated"  id="cancel_reason" name="cancel_reason" placeholder="Enter cancel reason..." rows="3"></textarea>'
-            );
+        '<textarea style="width: 337px;" class="form-control animated"  id="cancel_reason" name="cancel_reason" placeholder="Enter cancel reason..." rows="3"></textarea>'
+        );
 
     }
 
@@ -39,7 +39,7 @@ $('#order_status').on('change', function() {
             </div>
             <div class="title_right">
             <div class=" form-group pull-right top_search">
-            <a href="javascript:history.back()" class="btn btn-default" style="background: #2A3F54;color:#FFFFFF">Go Back</a> 
+            <a href="{{route('order-list')}}" class="btn btn-default" style="background: #2A3F54;color:#FFFFFF">Go Back</a> 
             </div>
             </div>
         </div>
@@ -56,7 +56,37 @@ $('#order_status').on('change', function() {
                 @endif
                 <div class="x_panel">
                     <div class="x_title">
-                        <div class="order_status_form">
+                        <div class="row">
+                        <form id="supdate" role="form" method="POST" action="{{ route('order.status.change') }}">
+                                {!! csrf_field() !!}
+                            <input type="hidden" name="order_id" id="order_id"
+                                value="{{$orderdetail[0]->order_id}}">
+                            <input type="hidden" name="return_flag" id="return_flag" value="0">
+                            <input type="hidden" name="id" id="id" value="{{$orderdetail[0]->id}}">
+                            <div class="col-lg-8">
+                            <label>Order Status: </label> 
+                                    <select class="select2_group form-control" name="order_status" id="order_status">
+                                    <!-- <optgroup label="Select order status"> -->
+                                    <option value="0" @if($orderdetail[0]->order_status == 0) selected @endif
+                                            >Pending</option>
+                                        <option value="1" @if($orderdetail[0]->order_status == 1) selected @endif
+                                            >Accept</option>
+                                        <option value="2" @if($orderdetail[0]->order_status == 2) selected @endif
+                                            >Cancelled</option>
+                                        <option value="3" @if($orderdetail[0]->order_status == 3) selected @endif >On
+                                            the way</option>
+                                        <option value="4" @if($orderdetail[0]->order_status == 4) selected @endif
+                                            >Delivered</option>
+                                  </optgroup>
+                                 </select> 
+                                 <div id="cancel_area"></div>
+                            </div>
+                            <div class="col-lg-4">
+                            <button class="btn btn-dark btn_submit mt-5" style="margin-top : 24px;" type="submit" id="extraSearch">Submit</button>
+                            </div>  
+                          </form>                     
+                        </div>
+                        <!-- <div class="order_status_form">
                             <form id="supdate" role="form" method="POST" action="{{ route('order.status.change') }}">
                                 {!! csrf_field() !!}
                                 <input type="hidden" name="order_id" id="order_id"
@@ -83,14 +113,9 @@ $('#order_status').on('change', function() {
                                     </span>
                                     </submit>
                                 </div>
-                        </div>
+                        </div> -->
 
-                        <!-- <h2></small></h2>
-    
-    <ul class="nav navbar-right panel_toolbox">
-        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-    </li>
-    </ul> -->
+                        
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
@@ -137,7 +162,7 @@ $('#order_status').on('change', function() {
                                     <address>
                                         <strong>{{$orderdetail[0]->fname}} {{$orderdetail[0]->lname }}</strong>
                                         <br>{{$orderdetail[0]->address}}
-                                        <br>Phone: {{$orderdetail[0]->phone}}
+                                        <br>Phone: {{$orderdetail[0]->phone_no}}
                                         <br>Email: {{$orderdetail[0]->email}}
                                     </address>
                                 </div>
@@ -181,10 +206,10 @@ $('#order_status').on('change', function() {
                                                 <td>{{$orderdetail[0]->card_qty}}</td>
                                                 <td>{{$orderdetail[0]->card_title}}</td>
                                                 <td>{{$orderdetail[0]->card_size}}</td>
-                                                <td>${{number_format($orderdetail[0]->price, 2)}}</td>
+                                                <td>${{number_format($orderdetail[0]->card_price, 2)}}</td>
                                                 <!-- <td>El snort testosterone trophy driving gloves handsome gerry Richardson helvetica tousled street art master testosterone trophy driving gloves handsome gerry Richardson
                 </td> -->
-                                                <td>${{number_format($orderdetail[0]->price * $orderdetail[0]->card_qty, 2)}}
+                                                <td>${{number_format($orderdetail[0]->card_price * $orderdetail[0]->card_qty, 2)}}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -209,11 +234,11 @@ $('#order_status').on('change', function() {
                                             <tbody>
                                                 <tr>
                                                     <th style="width:50%">Subtotal:</th>
-                                                    <td> ${{ number_format($orderdetail[0]->sub_total, 2)}}</td>
+                                                    <td> ${{number_format($orderdetail[0]->card_price * $orderdetail[0]->card_qty, 2)}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Postage costs:</th>
-                                                    <td> ${{$orderdetail[0]->postage_costs}}</td>
+                                                    <th>Tax(%):</th>
+                                                    <td> $0.00</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Shipping:</th>
@@ -221,7 +246,7 @@ $('#order_status').on('change', function() {
                                                 </tr>
                                                 <tr>
                                                     <th>Total:</th>
-                                                    <td>${{number_format($orderdetail[0]->total, 2)}}</td>
+                                                    <td>${{number_format($orderdetail[0]->card_price * $orderdetail[0]->card_qty, 2)}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>

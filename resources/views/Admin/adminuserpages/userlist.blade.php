@@ -79,7 +79,7 @@
                     <table id="example" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Id#</th>
+                          <!-- <th>Id#</th> -->
                           <th>S.no#</th>
                           <th>Customer</th>
                           <th>Name</th>
@@ -89,7 +89,54 @@
                           <th>Action</th>
                         </tr>
                       </thead>
-                      
+                      <tbody>
+                      @if(!$userList->isEmpty())
+                      <?php $i = 1; ?>
+                      @foreach($userList as $arr)
+                      <tr id="row{{$arr->id }}">
+                        <td>{{$i}}</td>
+                        <td>
+                        @if($arr->image == "")
+                        <img src="{{url('public/images/test.png')}}" height="50" width="50">
+                        @else
+                        <img src="{{url('public/upload/user').'/'.$arr->image}}" height="50" width="50">
+                        @endif
+                        </td>                       
+                        <td>{{$arr->fname ." ". $arr->lname}}</td>
+                        <td>{{$arr->email}}</td>
+                        <td>{{$arr->phone}}</td>
+                        <td class="user_status">
+                        @if($arr->status == "Active")
+                        <div class="changediv{{$arr->id}} status-change"><button
+                                type="button"
+                                class="btn btn-success change-status{{$arr->id}}"
+                                onClick="UserStatusChange('{{$arr->id}}')">{{$arr->status}}</button>
+                        </div>
+                        @else
+                        <div class="changediv{{$arr->id}} status-change"><button
+                                type="button"
+                                class="btn btn-danger change-status{{$arr->id}}"
+                                onClick="UserStatusChange('{{$arr->id}}')">{{$arr->status}}</button>
+                        </div>
+                        @endif
+                        </td>
+                        <td>
+                        <button class="btn btn-dark p-2">
+                          <a href="{{route('edit-customer',[$arr->id])}}" class="text-white"
+                              style=" color: #FFFFFF;"><i
+                                  class="fa fa-edit"></i>Edit</button></a>                        
+                        <button class="btn  btn-dark p-2">
+                            <a href="javascript:void(0);" onClick="Userdelete('{{$arr->id}}')"
+                                data-id="{{$arr->id}}" 
+                                class="text-white delete-user{{$arr->id}}"
+                                style=" color: #FFFFFF;"><i class="fa fa-trash-o"></i>
+                                Delete </button></a>
+                        </td>
+                      </tr>
+                      <?php $i++; ?>
+                      @endforeach
+                      @endif
+                      </tbody>                      
                     </table>
                   </div>
                 </div>
@@ -112,115 +159,169 @@
     @include('Admin.layout.datatable_script')
 
    <script>
-    $(document).ready(function () {
-    $('#example').DataTable({
-      processing: true,
-      serverSide: true,
-      "lengthMenu": [
-          [10, 20, 50, 100, 500],
-          [10, 20, 50, 100, 500]
-      ],
+  //   $(document).ready(function () {
+  //   $('#example').DataTable({
+  //     processing: true,
+  //     serverSide: true,
+  //     "lengthMenu": [
+  //         [10, 20, 50, 100, 500],
+  //         [10, 20, 50, 100, 500]
+  //     ],
 
-      pageLength: 10,
-      "order": [
-          [0, "desc"],
-          [0, 'desc']
-      ],
+  //     pageLength: 10,
+  //     "order": [
+  //         [0, "desc"],
+  //         [0, 'desc']
+  //     ],
 
-      ajax: '{{route("get-userlist")}}',
+  //     ajax: '{{route("get-userlist")}}',
       
-      "columns": [
-              {
-                "data": "id",
-                name: 'id',
-                searchable: false,
-                visible: false
-              },
-              {
-                "data": "srno",
-                name: 'srno',
-                searchable: false,
-                "orderable": false
-              },
+  //     "columns": [
+  //             {
+  //               "data": "id",
+  //               name: 'id',
+  //               searchable: false,
+  //               visible: false
+  //             },
+  //             {
+  //               "data": "srno",
+  //               name: 'srno',
+  //               searchable: false,
+  //               "orderable": false
+  //             },
               
-              {
-                "data": "image",
-                "orderable": false
-              },
-              {
-                "data": "name",
-                name: 'name',
-                searchable: false,
-                "orderable": false
-              },
-              {
-                "data": "email",
-                name: 'email',
-                searchable: false,
-                "orderable": false
-              },
+  //             {
+  //               "data": "image",
+  //               "orderable": false
+  //             },
+  //             {
+  //               "data": "name",
+  //               name: 'name',
+  //               searchable: false,
+  //               "orderable": false
+  //             },
+  //             {
+  //               "data": "email",
+  //               name: 'email',
+  //               searchable: false,
+  //               "orderable": false
+  //             },
 
-              {
-                "data": "mobile",
-                name: 'mobile',
-                searchable: false,
-                "orderable": false
-              },
-              {
-                "data": "status",
-                "orderable": false
-              },
-              {
-                "data": "action",
-                "orderable": false
-              }
+  //             {
+  //               "data": "mobile",
+  //               name: 'mobile',
+  //               searchable: false,
+  //               "orderable": false
+  //             },
+  //             {
+  //               "data": "status",
+  //               "orderable": false
+  //             },
+  //             {
+  //               "data": "action",
+  //               "orderable": false
+  //             }
 
-              ],
+  //             ],
 
-              "rowId": "id",
+  //             "rowId": "id",
+  //   });
+  //  });
+
+  $(document).ready(function() {
+    $('#example').DataTable({
+        'columnDefs': [ {
+               'targets': [], // column index (start from 0)
+               'orderable': false, // set orderable false for selected columns
+         }]
     });
-   });
+  });
 
-  //Active Inactive status change 
-  function UserStatusChange(id){
-   var Statusvalue =  $(".change-status" +id).text();
-   
-    
-   if(Statusvalue == 'Active'){
-     Statusvalue = "Inactive";
-   }else{
-    Statusvalue = "Active";
-   }
-   
-   $.ajax({
-    type: 'post',
-    url: "{{ route('user.status.change') }}",
-    data: {
-      _token : "{{csrf_token()}}",
-          'user_id' : id,
-          'status' : Statusvalue
-    },
-    success: function(data) {            
-      $('#sumess').fadeIn().html('<div class="alert alert-success alert-block">' +
-                '<button type="button" class="close" data-dismiss="alert">×</button>' +
-                '<strong>' + data + '</strong>' +
-                '</div>');
 
-      setTimeout(function() {
-        $('#sumess').fadeOut("slow");
-        }, 300 );
-  
-      if(Statusvalue == 'Active'){        
-      $('.changediv' +id).html('<span class="label label-success change-status'+id+'"  onClick="UserStatusChange('+id+')">'+Statusvalue+'</span>' ).fadeIn('slow');
-      }else{
-        $('.changediv'+id).html('<span class="label label-danger change-status'+id+'"  onClick="UserStatusChange('+id+')">'+Statusvalue+'</span>' ).fadeIn('slow');
-      }
-      
+//Active Inactive status change 
+function UserStatusChange(id) {
+    var Statusvalue = $(".change-status" + id).text();
+
+    if (Statusvalue == 'Active') {
+        Statusvalue = "Inactive";
+    } else {
+        Statusvalue = "Active";
     }
+
+    $.ajax({
+        type: 'post',
+        url: "{{ route('user.status.change') }}",
+        data: {
+            _token: "{{csrf_token()}}",
+            'user_id': id,
+            'status': Statusvalue
+        },
+        success: function(data) {
+            // $('#sumess').fadeIn().html('<div class="alert alert-success alert-block">' +
+            //           '<button type="button" class="close" data-dismiss="alert">×</button>' +
+            //           '<strong>' + data + '</strong>' +
+            //           '</div>');
+
+            // setTimeout(function() {
+            //   $('#sumess').fadeOut("slow");
+            //   }, 300 );
+            success_noti(data);
+            if (Statusvalue == 'Active') {
+
+                $('.changediv' + id).html('<button type="button" class="btn btn-success change-status' + id +
+                    '"  onClick="UserStatusChange(' + id + ')" >' + Statusvalue + '</button>');
+            } else {
+
+                $('.changediv' + id).html('<button type="button" class="btn btn-danger change-status' + id +
+                    '"  onClick="UserStatusChange(' + id + ')" >' + Statusvalue + '</button>');
+            }
+
+        },
+        error: function(errorData) {
+
+            console.log(errorData);
+
+            alert('Please refresh page and try again!');
+
+        }
+
     });
 
-  }
-   </script>
+}
+
+// User delete
+function Userdelete(id) {
+toastDelete.fire({
+}).then(function(e) {
+
+    if (e.value === true) {
+        var userid = $('.delete-user' + id).data('id');
+        console.log(userid);
+        $.ajax({
+            type: 'post',
+            url: "{{ route('delete-customer-post') }}",
+            data: {
+                _token: "{{csrf_token()}}",
+                'id': userid
+            },
+            success: function(data) {
+
+                const obj = JSON.parse(data);
+                console.log(obj.msg);
+                $("#row" + id).remove();
+                success_noti(obj.msg);
+                // location.reload();
+            }
+        });
+    } else {
+        e.dismiss;
+    }
+}, function(dismiss) {
+    return false;
+});
+
+};
+</script>
 
   </body>
 </html>

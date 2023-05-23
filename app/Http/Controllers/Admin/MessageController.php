@@ -15,7 +15,8 @@ class MessageController extends Controller
      */
     public function index()
     {
-        return  view('Admin.admintmessagepages.textmessage_list');
+      $data['messlist'] = Message::orderby('id','DESC')->get();
+      return  view('Admin.admintmessagepages.textmessage_list')->with($data);
     }
 
     /**
@@ -59,12 +60,17 @@ class MessageController extends Controller
         $textmess->text_message = $request->text_mess;      
         $textmess->status = $status;
         $textmess->card_id =  $card_id ;
-        $textmess->save();
+        $res = $textmess->save();
 
+        if($res){
         return redirect("admin/textmessagelist")->with(
             "success",
-            "message added successfully"
+            "Text message has been added successfully."
         );
+        }else{
+        return back()->with("failed", "OOPs! Some internal issue occured."); 
+        }
+        
     }
 
     /**
@@ -124,12 +130,17 @@ class MessageController extends Controller
             $textmessfind->text_message = $request->text_mess ;
             $textmessfind->status = $status;
             $textmessfind->card_id = $card_id;
-            $textmessfind->save();
+            $res = $textmessfind->save();
 
+            if($res){
             return redirect("admin/textmessagelist")->with(
                 "success",
-                " Text message updated successfully"
+                " Text message has been updated successfully."
             );
+            }else{
+            return back()->with("failed", "OOPs! Some internal issue occured."); 
+            }
+
         }
     }
 
@@ -142,11 +153,15 @@ class MessageController extends Controller
     public function destroy(Request $request)
     {
         $textmesslist = Message::find($request->id);
-         $textmesslist->delete();
-         return response()->json('success');
+         $result = $textmesslist->delete();
+         if ($result) {
+            return json_encode(array('status' => 'success','msg' => 'Text message has been deleted successfully!'));
+         }else {
+            return json_encode(array('status' => 'error','msg' => 'Some internal issue occured.'));
+         }
     }
 
-    // get message list
+    // get message list by ajax
     public function getTextmessagelist(Request $request)
     {
         $totalFilteredRecord = $totalDataRecord = $draw_val = "";
@@ -191,17 +206,7 @@ class MessageController extends Controller
                             // ->orderBy($order_val,$dir_val)
                             ->get();
 
-        $totalFilteredRecord = Message::select("id","text_message", "status")
-                            ->where(function ($query) use ($search_text) {
-                                $query->where('id', 'LIKE',"%{$search_text}%")
-                                        ->orWhere('text_message', 'LIKE',"%{$search_text}%")
-                                        ->orWhere('status', 'LIKE',"%{$search_text}%");
-            
-                            })
-                            ->offset($start_val)
-                            ->limit($limit_val)
-                            ->orderBy($order_val,$dir_val)
-                            ->count();
+        $totalFilteredRecord = $mess_data->count();
         }
             
         $data_val = array();
@@ -216,9 +221,9 @@ class MessageController extends Controller
             $nestedData['textmessage'] = $value->text_message;  
                    
             if($value->status == "Active"){
-                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><span class="label label-success change-status'.$value->id.'"  onClick="MessStatusChange('.$value->id.')">'.$value->status.'</span></div>';
+                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><button type="button" class="btn btn-success change-status'.$value->id.'"  onClick="MessStatusChange('.$value->id.')">'.$value->status.'</button></div>';
             }else{
-                $nestedData['status'] = '<div class="changediv'.$value->id.' status-change"><span class="label label-danger change-status'.$value->id.'"  onClick="MessStatusChange('.$value->id.')">'.$value->status.'</span></div>';
+                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><button type="button" class="btn btn-danger change-status'.$value->id.'"  onClick="MessStatusChange('.$value->id.')">'.$value->status.'</button></div>';
             }
             
             $nestedData['action'] = '<button class="btn btn-dark p-2" >
@@ -253,6 +258,6 @@ class MessageController extends Controller
         ->update(['status' => $newstatus
                  ]
                 );
-       return response()->json('Status changed successfully !');
+       return response()->json('Text message status changed successfully.');
 	}
 }

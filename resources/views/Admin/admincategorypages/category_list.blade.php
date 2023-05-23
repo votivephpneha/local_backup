@@ -78,14 +78,32 @@
                     <table id="example" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Id#</th>
+                          <!-- <th>Id#</th> -->
                           <th>S.no#</th>
                           <th>Category</th>
-                          <!-- <th>Parent category</th> -->
                           <th>Action</th>
                         </tr>
                       </thead>
-                      
+                      <tbody>
+                        @if(!$catList->isEmpty())
+                        <?php $i =1 ;?>
+                        @foreach($catList as $arr)
+                        <tr id="row{{ $arr->id }}">
+                          <td>{{$i}}</td>
+                          <td>{{$arr->name}}</td>
+                          <td>
+                          <button class="btn btn-dark p-2" >
+                          <a href="{{route('edit.category',[$arr->id])}}" class="text-white" style=" color: #FFFFFF;"><i class="fa fa-edit" ></i>Edit</button></a>
+                          <button class="btn btn-dark p-2">
+                          <a href="{{route('subcategorylist',[$arr->id])}}" class="text-white" style=" color: #FFFFFF;"><i class="fa fa-eye" ></i>View</button></a>
+                          <button class="btn  btn-dark p-2" >
+                          <a href="javascript:void(0);" onClick="delete_category('{{$arr->id}}')" data-id="{{$arr->id}}" class="text-white delete-cat{{$arr->id}}" style=" color: #FFFFFF;"><i class="fa fa-trash-o"></i> Delete </button></a>
+                          </td>
+                        </tr>
+                        <?php $i++ ;?>
+                        @endforeach
+                        @endif
+                      </tbody>                      
                     </table>
                   </div>
                 </div>
@@ -108,79 +126,96 @@
     @include('Admin.layout.datatable_script')
 
    <script>
-    $(document).ready(function () {
-    $('#example').DataTable({
-      processing: true,
-      serverSide: true,
-      "lengthMenu": [
-          [10, 20, 50, 100, 500],
-          [10, 20, 50, 100, 500]
-      ],
+  //   $(document).ready(function () {
+  //   $('#example').DataTable({
+  //     processing: true,
+  //     serverSide: true,
+  //     "lengthMenu": [
+  //         [10, 20, 50, 100, 500],
+  //         [10, 20, 50, 100, 500]
+  //     ],
 
-      pageLength: 10,
-      "order": [
-          [0, "desc"],
-          [0, 'desc']
-      ],
+  //     pageLength: 10,
+  //     "order": [
+  //         [0, "desc"],
+  //         [0, 'desc']
+  //     ],
 
-      ajax: '{{route("get.categorylist")}}',
+  //     ajax: '{{route("get.categorylist")}}',
       
-      "columns": [
-              {
-                "data": "id",
-                name: 'id',
-                searchable: false,
-                visible: false
-              },
-              {
-                "data": "srno",
-                name: 'srno',
-                searchable: false,
-                "orderable": false
-              },
+  //     "columns": [
+  //             {
+  //               "data": "id",
+  //               name: 'id',
+  //               searchable: false,
+  //               visible: false
+  //             },
+  //             {
+  //               "data": "srno",
+  //               name: 'srno',
+  //               searchable: false,
+  //               "orderable": false
+  //             },
               
-              {
-                "data": "category",
-                "orderable": false
-              },
-              // {
-              //   "data": "subcategory",
-              //   name: 'subcategory',
-              //   searchable: false,
-              //   "orderable": false
-              // },
+  //             {
+  //               "data": "category",
+  //               "orderable": false
+  //             },
+  //             // {
+  //             //   "data": "subcategory",
+  //             //   name: 'subcategory',
+  //             //   searchable: false,
+  //             //   "orderable": false
+  //             // },
               
-              {
-                "data": "action",
-                "orderable": false
-              }
+  //             {
+  //               "data": "action",
+  //               "orderable": false
+  //             }
 
-              ],
+  //             ],
 
-              "rowId": "id",
+  //             "rowId": "id",
+  //   });
+  //  });
+  $(document).ready(function() {
+    var mytable = $('#example').DataTable({
+        'columnDefs': [ {
+               'targets': [], // column index (start from 0)
+               'orderable': false, // set orderable false for selected columns
+         }]
     });
-   });
+  });
 
      //  delete category
-     function delete_category(id){
-      
-      if(confirm('Are you sure delete this category ?')){
-         var catid = $('.delete-cat'+ id).data('id');
-
-            $.ajax({
+function delete_category(id) {
+toastDelete.fire({}).then(function(e) {
+    if (e.value === true) {
+        var catid = $('.delete-cat' + id).data('id');
+        $.ajax({
             type: 'post',
             url: "{{ route('delete.category.post') }}",
             data: {
-              _token : "{{csrf_token()}}",
-                 'id' : catid
-
+                _token: "{{csrf_token()}}",
+                'id': catid
             },
-            success: function(data) {            
-                  location.reload();              
+            success: function(data) {
+              const obj = JSON.parse(data);
+                console.log(obj.msg);
+                $("#row" + id).remove();
+                success_noti(obj.msg);
+                // mytable.ajax.reload();
             }
-         });
-      }
-   };
+        });
+    } else {
+        e.dismiss;
+    }
+}, function(dismiss) {
+
+    return false;
+
+});
+};
    </script>
   
   </body>

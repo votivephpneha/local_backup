@@ -34,6 +34,15 @@
   </div>
   <div class="clearfix"></div>
   <div class="row">
+  @if(Session::has('failed'))
+    <div class="alert alert-danger alert-block">
+
+        <button type="button" class="close" data-dismiss="alert">×</button>
+
+        <strong>{{ Session::get('failed')}}</strong>
+
+    </div>
+    @endif
     <div class="col-md-12 col-sm-12 col-xs-12">
       <div class="x_panel">
         <div class="x_title">

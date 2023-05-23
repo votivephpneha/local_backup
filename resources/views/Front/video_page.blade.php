@@ -64,6 +64,7 @@
 					<input type="hidden" name="qr_img_val" value="" class="qr_image">
 					<input type="hidden" name="card_id" value="{{ $db_card_data->id }}">
 					<input type="hidden" name="card_size_id" value="{{ $c_size_id }}">
+					<input type="hidden" name="cart_id" value="{{ $cart_id }}">
 					<input type="file" name="add_video_file" id='videoUpload'>
 					<label class="label-add-video" for="videoUpload">Add Video</label>
 					<!--<input type="submit" name="add_video_btn" value="Add Video">-->

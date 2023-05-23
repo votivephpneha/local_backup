@@ -41,6 +41,15 @@
             <strong>{{ Session::get('success')}}</strong>
       </div>        
       @endif
+      @if(Session::has('failed'))
+      <div class="alert alert-danger alert-block">
+
+          <button type="button" class="close" data-dismiss="alert">×</button>
+
+          <strong>{{ Session::get('failed')}}</strong>
+
+      </div>
+      @endif
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
             <div class="x_title">
@@ -67,7 +76,7 @@
                   @endif
                   </div>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="price">Price <span class="required">*</span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
@@ -78,8 +87,8 @@
 
                   @endif
                   </div>
-                </div>
-                <div class="form-group">
+                </div> -->
+                <!-- <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="price">Quantity <span class="required">*</span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
@@ -90,7 +99,7 @@
 
                   @endif
                   </div>
-                </div>
+                </div> -->
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Description">Description <span class="required">*</span>
                   </label>
@@ -175,12 +184,42 @@
                   
                 </div>                      
                 <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Card Preview <span class="required">*</span>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Thumb Image  Preview <span class="required">*</span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
+                  @if($carddata->card_image == "")
+                  <img src="{{ url('public/images/imageicon.png')}}" height="50" width="50">
+                  @else
                   <img src="{{ asset('public/upload/cards').'/'. $carddata->card_image}}" height="50" width="50">
+                  @endif
+                  
                   </div>                       
                 </div>
+                <div class="form-group">
+                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Card Back image</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input id="card_back_image" class="form-control col-md-7 col-xs-12" type="file" name="card_back_image"  accept="image/png, image/gif, image/jpeg"> 
+                @if($errors->has('card_back_image'))
+
+                <span class="text-danger">{{ $errors->first('card_back_image')}}</span>
+
+                @endif 
+                </div>
+                
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Back Image Preview <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                  @if($carddata->card_back_image == "")
+                  <img src="{{ url('public/images/imageicon.png')}}" height="50" width="50">
+                  @else
+                  <img src="{{ asset('public/upload/cards').'/'. $carddata->card_back_image}}" height="50" width="50">
+                  @endif
+                  
+                  </div>                       
+                </div>
+
                 <div class="form-group">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Card Gallery image</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">

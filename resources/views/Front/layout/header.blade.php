@@ -49,7 +49,7 @@
               <a class="nav-link" href="{{ url('user/userProfile') }}"><i class='bx bx-user-circle'></i></a>
             @endif
           </li>
-          <li><a class="nav-link " href="#"><i class='bx bx-cart'></i></a></li>
+          <li><a class="nav-link " href="{{ url('cart') }}"><i class='bx bx-cart'></i></a></li>
           <li><a class="getstarted " href="#"> Design Your Card</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>

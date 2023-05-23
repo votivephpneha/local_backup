@@ -240,9 +240,9 @@ class VoucherCodeController extends Controller
             $nestedData['apply_on_amount'] = $value->apply_min_amount; 
             $nestedData['valid_till'] = $value->valid_till;                   
             if($value->status == 1){
-                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><span class="label label-success change-status'.$value->id.'"  onClick="VoucherStatusChange('.$value->id.')">Active</span></div>';
+                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><button type="button" class="btn btn-success change-status'.$value->id.'"  onClick="VoucherStatusChange('.$value->id.')">Active</button></div>';
             }else{
-                $nestedData['status'] = '<div class="changediv'.$value->id.' status-change"><span class="label label-danger change-status'.$value->id.'"  onClick="VoucherStatusChange('.$value->id.')">Inactive</span></div>';
+                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><button type="button" class="btn btn-danger change-status'.$value->id.'"  onClick="VoucherStatusChange('.$value->id.')">Inactive</button></div>';
             }
             
             $nestedData['action'] = '<button class="btn btn-dark p-2">

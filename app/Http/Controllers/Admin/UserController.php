@@ -14,9 +14,11 @@ class UserController extends Controller
 {
     // get show user list page
     public function UserList(){
-     return view("Admin.adminuserpages.userlist");
+    $data['userList'] = User::where('role','user')->orderby('id','DESC')->get();
+    return view("Admin.adminuserpages.userlist")->with($data);
     }
     
+    // get user list by ajax
     public function GetUsers(Request $request)
     {     
         $totalFilteredRecord = $totalDataRecord = $draw_val = "";
@@ -44,7 +46,7 @@ class UserController extends Controller
         {
         $user_data = User::where('role','user')->offset($start_val)
         ->limit($limit_val)
-        // ->orderBy($order_val,$dir_val)
+        // ->orderBy($order_val,$dir_val)      
         ->orderBy('id', 'ASC')
         ->get();
         }
@@ -66,20 +68,8 @@ class UserController extends Controller
                             // ->orderBy($order_val,$dir_val)
                             ->get();
 
-        $totalFilteredRecord = User::select("id","fname", "lname","email","phone","image","status")
-                            -> where('role','user')
-						    ->where(function ($query) use ($search_text) {
-							    $query->where('id', 'LIKE',"%{$search_text}%")
-                                      ->orWhere('email', 'LIKE',"%{$search_text}%")
-                                      ->orWhere('fname', 'LIKE',"%{$search_text}%")
-                                      ->orWhere('phone', 'LIKE',"%{$search_text}%")
-                                      ->orWhere('lname', 'LIKE',"%{$search_text}%");
-							})
-                            ->offset($start_val)
-                            ->limit($limit_val)
-                            ->orderBy('id', 'ASC')
-                            ->orderBy($order_val,$dir_val)
-                            ->count();
+        $totalFilteredRecord =  $user_data->count();
+                           
         }
          
         $data_val = array();
@@ -101,10 +91,10 @@ class UserController extends Controller
             $nestedData['name'] = $value->fname. $value->lname  ;
             $nestedData['email'] = $value->email;
             $nestedData['mobile'] =  $value->phone;           
-            if($value->status == "Active"){
-                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><span class="label label-success change-status'.$value->id.'" onClick="UserStatusChange('.$value->id.')">'.$value->status.'</span></div>';
+            if($value->status == "Active"){            
+                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><button type="button" class="btn btn-success change-status'.$value->id.'"  onClick="UserStatusChange('.$value->id.')">'.$value->status.'</button></div>';
             }else{
-                $nestedData['status'] = '<div class="changediv'.$value->id.' status-change"><span class="label label-danger change-status'.$value->id.'" onClick="UserStatusChange('.$value->id.')">'.$value->status.'</span></div>';
+                $nestedData['status'] = '<div class="changediv'.$value->id.' status-change"><button type="button" class="btn btn-danger change-status'.$value->id.'"  onClick="UserStatusChange('.$value->id.')">'.$value->status.'</button></div>';
             }
             
             $nestedData['action'] = '<button class="btn  p-2 btn-dark text-white">
@@ -148,7 +138,7 @@ class UserController extends Controller
             "user_status" => "required",
             "password" => "required|min:6",
             "confirmpassword" => "required|min:6|same:password",
-            "image" => "required",
+            // "image" => "required",
         ]);
 
         if ($request->user_status == 1) {
@@ -161,6 +151,8 @@ class UserController extends Controller
             $image = $request->file("image");
             $imageName = time() . "." . $image->extension();
             $image->move(public_path("upload/user"), $imageName);
+        }else{
+            $imageName  = Null;
         }
 
         $user = new User();
@@ -174,14 +166,11 @@ class UserController extends Controller
         $user->temp_password = $request->password;
         $user->image = $imageName;
         $user->role = "user";
-
-        // dd($user);
-
-        $user->save();
+        $res = $user->save();
 
         return redirect("admin/userlist")->with(
             "success",
-            "customer added successfully"
+            "Customer has been added successfully."
         );
     }
 
@@ -242,25 +231,26 @@ class UserController extends Controller
  
              return redirect("admin/userlist")->with(
                  "success",
-                 "User information updated successfully"
+                 "Customer has been updated successfully."
              );
          }
      }
  
  
-    public function deleteCustomer($id){
+    public function deleteCustomer(Request $request){
     
-    $deleteUser = User::find($id);
-
-    if(empty($deleteUser)){
-        return back()->with("failed", "Data not found");
-    }else{
-        $deleteUser->delete();
-        return redirect("admin/userlist")->with(
-                "success",
-                "delete successfully!!");
+    $user_id = $request->id;
+    // dd($user_id);
+    $deleteUser = User::find($user_id);
+    // if(empty($deleteUser)){
+    //     return back()->with("failed", "Data not found");
+    // }else{
+    $res = $deleteUser->delete();
+    if ($res) {
+    return json_encode(array('status' => 'success','msg' => 'Customer has been deleted successfully.!'));
+    }else {
+    return json_encode(array('status' => 'error','msg' => 'Some internal issue occured.'));
     }
-
     }
 
     // active inactive status change
@@ -273,6 +263,6 @@ class UserController extends Controller
         ->update(['status' => $newstatus
                  ]
                 );
-       return response()->json('Status changed successfully !');
+       return response()->json('Customer status changed successfully.');
 	}
 }

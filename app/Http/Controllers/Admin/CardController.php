@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use File;
 use Session;
 use Illuminate\Support\Str;
+use DB;
 
 class CardController extends Controller
 {
@@ -19,7 +20,8 @@ class CardController extends Controller
      */
     public function index()
     {
-      return view('Admin.admincardpages.card_list');
+      $data['cardList'] = DB::table('cards')->orderby('id', 'DESC')->get();
+      return view('Admin.admincardpages.card_list')->with($data);
     }
 
     /**
@@ -44,15 +46,16 @@ class CardController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "price" => "required",
+            // "price" => "required",
             "title" => "required",
             "description" => "required",
             "card_image" => "required",
             "card_status" => "required",
             "gall_image" =>"required",
-            "qty" => "required",
+            // "qty" => "required",
             "category_id" => "required",
-            "subcategory_id" => "required"
+            "subcategory_id" => "required",
+            "card_back_image" => "required"
         ]);
 
         if ($request->card_status == 1) {
@@ -67,42 +70,48 @@ class CardController extends Controller
             $image->move(public_path("upload/cards"), $imageName);
         }
 
+        if ($request->hasFile("card_back_image")) {
+            $backimage = $request->file("card_back_image");
+            $backimageName = time() . "." . $backimage->extension();
+            $backimage->move(public_path("upload/cards"), $backimageName);
+        }
+
         $card = new Card();
-        $card->price = $request->price;
+        // $card->price = $request->price;
         $card->card_title = $request->title;
         $card->description = $request->description;
         $card->status = $status;
-        $card->qty = $request->qty;
+        // $card->qty = $request->qty;
         $card->card_image = $imageName;
         $card->category_id = $request->category_id;
         $card->sub_category_id = $request->subcategory_id;
-        $card->save();
+        $card->card_back_image =  $backimageName;
+        $cardValue = $card->save();
 
         $files = $request->file('gall_image');
 
         foreach ($files as $file) {
-
-            $name = Str::random(6) . time() . '.' . $file->getClientOriginalExtension();
-            // dd($name);
-
+            $gallimageName = Str::random(6) . time() . '.' . $file->getClientOriginalExtension();         
             $image = $file;
+            $image->move(public_path("upload/gallery_images"), $gallimageName);
+            $cardgalValue = Card_gallery_image::create([
 
-            $image->move(public_path("upload/gallery_images"), $name);
-
-
-            Card_gallery_image::create([
-
-                'gall_images' => $name,
+                'gall_images' =>  $gallimageName,
 
                 'card_id' => $card->id,
 
             ]);
         }
-
-        return redirect("admin/cardlist")->with(
-            "success",
-            "Card added successfully"
-        );
+        
+        if($cardValue && $cardgalValue){
+            return redirect("admin/cardlist")->with(
+                "success",
+                "Card has been added successfully."
+            );
+        }else{
+           return back()->with("failed", "OOPs! Some internal issue occured.");         
+        }
+       
 
     }
 
@@ -143,13 +152,14 @@ class CardController extends Controller
     public function update(Request $request, Card $card,$id)
     {
         $request->validate([
-            "price" => "required",
+            // "price" => "required",
             "description" => "required",
             "card_status" => "required",
             "title" => "required",
-            "qty" => "required",
+            // "qty" => "required",
             "category_id" => "required",
             "subcategory_id" => "required"
+            // "card_back_image" => "required"
         ]);
 
         $cardfind = Card::find($id);
@@ -169,17 +179,26 @@ class CardController extends Controller
             } else {
                 $imageName = $cardfind->card_image;
             }
+
+            if ($request->hasFile("card_back_image")) {
+                $backimage = $request->file("card_back_image");
+                $backimageName = time() . "." . $backimage->extension();
+                $backimage->move(public_path("/upload/cards"), $backimageName);
+            } else {
+                $backimageName = $cardfind->card_back_image;
+            }
           
-            $cardfind->price = $request->price ;
+            // $cardfind->price = $request->price ;
             $cardfind->card_title = $request->title ;
             $cardfind->description = $request->description;
             $cardfind->status = $status;
             $cardfind->card_image = $imageName;
-            $cardfind->qty = $request->qty;
+            // $cardfind->qty = $request->qty;
             $cardfind->category_id = $request->category_id;
             $cardfind->sub_category_id = $request->subcategory_id; 
+            $cardfind->card_back_image =  $backimageName;
 
-            $cardfind->save();
+            $cardupdatevalue = $cardfind->save();
 
             if ($request->hasFile("card_gall_image")) {
 
@@ -193,7 +212,7 @@ class CardController extends Controller
 
                     $image->move(public_path("upload/gallery_images"), $name);
 
-					Card_gallery_image::create([
+					$updategalValue = Card_gallery_image::create([
 
 						'gall_images' => $name,
 
@@ -202,11 +221,16 @@ class CardController extends Controller
 					]);
 				}
             }
-
-            return redirect("admin/cardlist")->with(
-                "success",
-                "Card information updated successfully"
-            );
+            
+            if($cardupdatevalue && $updategalValue){
+                return redirect("admin/cardlist")->with(
+                    "success",
+                    "Card has been updated successfully."
+                );
+            }else{
+                return back()->with("failed", "OOPs! Some internal issue occured.");  
+            }
+            
         }
     }
 
@@ -226,10 +250,15 @@ class CardController extends Controller
          File::delete($image_path);
        }
 
-        $list->delete();
-        return response()->json('success');
+        $result = $list->delete();
+        // return response()->json('success');
+        if ($result) {
+            return json_encode(array('status' => 'success','msg' => 'Card has been deleted successfully!'));
+        } else {
+            return json_encode(array('status' => 'error','msg' => 'Some internal issue occured.'));
+        }
     }
-    // get card list
+    // get card list  by ajax
     public function getCardlist(Request $request)
     {
         $totalFilteredRecord = $totalDataRecord = $draw_val = "";
@@ -238,9 +267,9 @@ class CardController extends Controller
         1 =>'srno',
         2=> 'title',
         3=> 'image',
-        4=> 'price',              
-        5=> 'status',
-        6=> 'action'
+        // 4=> 'price',              
+        4=> 'status',
+        5=> 'action'
         );
             
         $totalDataRecord = Card::count();
@@ -278,19 +307,7 @@ class CardController extends Controller
                             // ->orderBy($order_val,$dir_val)
                             ->get();
 
-        $totalFilteredRecord = Card::select("id","card_title","price", "status","card_image")
-                            ->where(function ($query) use ($search_text) {
-                                $query->where('id', 'LIKE',"%{$search_text}%")
-                                        ->orWhere('price', 'LIKE',"%{$search_text}%")
-                                        ->orWhere('status', 'LIKE',"%{$search_text}%")
-                                        ->orWhere('card_title', 'LIKE',"%{$search_text}%")
-                                        ->orWhere('card_image', 'LIKE',"%{$search_text}%");
-                                        
-                            })
-                            ->offset($start_val)
-                            ->limit($limit_val)
-                            ->orderBy($order_val,$dir_val)
-                            ->count();
+        $totalFilteredRecord =   $card_data->count();
         }
             
         $data_val = array();
@@ -307,12 +324,14 @@ class CardController extends Controller
             $nestedData['id'] = $value->id;
             $nestedData['title'] = $value->card_title;
             $nestedData['image'] ='<img src="'.$imagepath.'" height="50" width="50">';  
-            $nestedData['price'] = '$'.$newprice ;
+            // $nestedData['price'] = '$'.$newprice ;
                    
                 if($value->status == "Active"){
-                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><span class="label label-success change-status'.$value->id.'"  onClick="StatusChange('.$value->id.')">'.$value->status.'</span></div>';
+                // $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><span class="label label-success change-status'.$value->id.'"  onClick="StatusChange('.$value->id.')">'.$value->status.'</span></div>';
+                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><button type="button" class="btn btn-success change-status'.$value->id.'"  onClick="StatusChange('.$value->id.')">'.$value->status.'</button></div>';
             }else{
-                $nestedData['status'] = '<div class="changediv'.$value->id.' status-change"><span class="label label-danger change-status'.$value->id.'"  onClick="StatusChange('.$value->id.')">'.$value->status.'</span></div>';
+                // $nestedData['status'] = '<div class="changediv'.$value->id.' status-change"><span class="label label-danger change-status'.$value->id.'"  onClick="StatusChange('.$value->id.')">'.$value->status.'</span></div>';
+                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><button type="button" class="btn btn-danger change-status'.$value->id.'"  onClick="StatusChange('.$value->id.')">'.$value->status.'</button></div>';
             }
             
             $nestedData['action'] = '<button class="btn btn-dark p-2">
@@ -345,7 +364,7 @@ class CardController extends Controller
 	{
         Card_gallery_image::where('id', '=', $gl_id)->delete();
 
-        return back()->with("success", "Image deleted successfully");
+        return back()->with("success", "Image has been deleted successfully.");
 	}
 
     public function Status_change(Request $request)
@@ -357,6 +376,6 @@ class CardController extends Controller
         ->update(['status' => $newstatus
                  ]
                 );
-       return response()->json('Status changed successfully !');
+       return response()->json('Card status changed successfully.');
 	}
 }

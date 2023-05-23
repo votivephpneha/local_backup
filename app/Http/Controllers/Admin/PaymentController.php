@@ -2,8 +2,10 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentTransaction;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use \PDF;
+use Auth;
 
 class PaymentController extends Controller
 {
@@ -14,8 +16,13 @@ class PaymentController extends Controller
      */
     public function index()
     {
-      
-     return  view('Admin.payment_history.payment_transaction_list');
+      $data['payhisList'] = PaymentTransaction::join('users', 'users.id', '=', 'payment_transactions.user_id')
+                            ->join('order', 'order.id', '=', 'payment_transactions.order_id')
+                            ->select("payment_transactions.*","users.fname as firstname","users.lname as lastname","order.order_id as order_id1")
+                            ->orderby('payment_transactions.id','DESC')
+                            ->get();
+
+     return  view('Admin.payment_history.payment_transaction_list')->with($data);
     }
 
     /**
@@ -25,7 +32,7 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -90,7 +97,7 @@ class PaymentController extends Controller
         //
     }
 
-    // get category list
+    // get category list by ajax
     public function GetPaymentTranslist(Request $request)
     {
         $totalFilteredRecord = $totalDataRecord = $draw_val = "";
@@ -145,20 +152,7 @@ class PaymentController extends Controller
                             // ->orderBy($order_val,$dir_val)
                             ->get();
 
-        $totalFilteredRecord =  PaymentTransaction::join('users', 'users.id', '=', 'payment_transactions.user_id')
-        ->join('order', 'order.id', '=', 'payment_transactions.order_id')
-        ->select("payment_transactions.*","users.fname as firstname","users.lname as lastname","order.order_id as order_id1")
-                            ->where(function ($query) use ($search_text) {
-                                $query->where('payment_transactions.id', 'LIKE',"%{$search_text}%");
-                                // ->orWhere('sub_categories.name', 'LIKE',"%{$search_text}%")
-                                // ->orWhere('sub_categories.status', 'LIKE',"%{$search_text}%")
-                                // ->orWhere('categories.name', 'LIKE',"%{$search_text}%");
-            
-                            })
-                            ->offset($start_val)
-                            ->limit($limit_val)
-                            ->orderBy($order_val,$dir_val)
-                            ->count();
+        $totalFilteredRecord =  $paytran_data->count();
         }
             
         $data_val = array();
@@ -198,5 +192,32 @@ class PaymentController extends Controller
             
         echo json_encode($get_json_data);  
  
+    }
+
+
+    //payment  invoice
+    public function Payment_Invoice($id)
+    {
+        $paymentdata = PaymentTransaction::join('users', 'users.id', '=', 'payment_transactions.user_id')
+        ->join('order', 'order.id', '=', 'payment_transactions.order_id')
+        ->join('cards', 'cards.id', '=', 'order.card_id')
+        ->select("payment_transactions.*","users.fname as firstname","users.lname as lastname","users.phone","users.email","users.address","order.order_id as order_id1","order.order_status","order.card_qty","cards.card_title")       
+        ->where('payment_transactions.id',$id)
+        ->get();
+
+      
+
+        // $path = public_path('images\logo.jpg');
+        // $type = pathinfo($path, PATHINFO_EXTENSION);
+        // $data = file_get_contents($path);
+        // $src ='data:image/' . $type . ';base64,' . base64_encode($data);
+
+        $invoicenum = '#'.str_pad(23 + 1, 8, "0", STR_PAD_LEFT);
+        $authdata =  Auth::user();
+
+        $todaydate =  $todayDate = Carbon::now()->format('Y-m-d');
+        $pdf = \PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true,'defaultFont' => 'sans-serif'])->loadView('Admin.payment_history.view_payment_invoice',compact('paymentdata','authdata','invoicenum'));
+        $pdf->stream();
+        return $pdf->download('invoice'.$paymentdata[0]->id.'-'.$todaydate.'.pdf');
     }
 }

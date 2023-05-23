@@ -15,13 +15,14 @@
     <link rel="icon" href="{{asset('public/images/favicon.ico')}}" type="image/ico" />
     <title>Cards List | BirthdayCards</title>
     <div class="main_container">
-        @include('Admin.layout.datatable_css')
+    @include('Admin.layout.datatable_css')
+
 </head>
 
 <body class="nav-md">
 
     <div class="container body">
-
+ 
         <div class="main_container">
 
             <!-- Sidebar -->
@@ -37,31 +38,19 @@
                     <div class="page-title">
 
                         <div class="title_left">
-
                             <h3>Cards List</small></h3>
-
                         </div>
 
                     </div>
-
-
-
-
-
                     <div class="clearfix"></div>
-
-
 
                     <div class="row">
 
 
-
+                        <div id="sumess1"></div>
                         <div id="sumess"></div>
 
-
-
                         @if(Session::has('success'))
-
                         <div class="alert alert-success alert-block">
 
                             <button type="button" class="close" data-dismiss="alert">×</button>
@@ -69,7 +58,14 @@
                             <strong>{{ Session::get('success')}}</strong>
 
                         </div>
+                        @elseif(Session::has('failed'))
+                        <div class="alert alert-danger alert-block">
 
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+
+                            <strong>{{ Session::get('failed')}}</strong>
+
+                        </div>
                         @endif
 
                         <div class="col-md-12 col-sm-12 col-xs-12">
@@ -110,7 +106,7 @@
 
                                                 <th>Image</th>
 
-                                                <th>Price</th>
+                                                <!-- <th>Price</th> -->
 
                                                 <th>Status</th>
 
@@ -119,6 +115,54 @@
                                             </tr>
 
                                         </thead>
+                                        <tbody>
+                                            @if (!$cardList->isEmpty())
+                                            <?php $i = 1; ?>
+                                            @foreach ($cardList as $arr)
+                                            <tr id="row{{ $arr->id }}">
+                                                <td>{{ $i }}</td>
+                                                <td>{{ $arr->id }}</td>
+                                                <td>{{ $arr->card_title }}</td>
+                                                <td><img src="{{url('public/upload/cards').'/'.$arr->card_image}}"
+                                                        height="55" width="55"></td>
+                                                <td class="project-state">
+                                                    @if($arr->status == "Active")
+                                                    <div class="changediv{{$arr->id}} status-change"><button
+                                                            type="button"
+                                                            class="btn btn-success change-status{{$arr->id}}"
+                                                            onClick="StatusChange('{{$arr->id}}')">{{$arr->status}}</button>
+                                                    </div>
+                                                    @else
+                                                    <div class="changediv{{$arr->id}} status-change"><button
+                                                            type="button"
+                                                            class="btn btn-danger change-status{{$arr->id}}"
+                                                            onClick="StatusChange('{{$arr->id}}')">{{$arr->status}}</button>
+                                                    </div>
+                                                    @endif
+                                                </td>
+                                                <td class=" align-middle">
+                                                    <button class="btn btn-dark p-2">
+                                                        <a href="{{route('edit.card',[$arr->id])}}" class="text-white"
+                                                            style=" color: #FFFFFF;"><i
+                                                                class="fa fa-edit"></i>Edit</button></a>
+                                                    <button class="btn btn-dark p-2">
+                                                        <a href="{{route('view.card',[$arr->id])}}" class="text-white"
+                                                            style=" color: #FFFFFF;"><i
+                                                                class="fa fa-eye"></i>View</button></a>
+                                                    <button class="btn  btn-dark p-2">
+                                                        <a href="javascript:void(0);" onClick="check('{{$arr->id}}')"
+                                                            data-id="{{$arr->id}}"
+                                                            class="text-white delete-card{{$arr->id}}"
+                                                            style=" color: #FFFFFF;"><i class="fa fa-trash-o"></i>
+                                                            Delete </button></a>
+                                                </td>
+                                            </tr>
+
+                                            <?php $i++; ?>
+
+                                            @endforeach
+                                            @endif
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -135,264 +179,265 @@
     </div>
 
     </div>
+    @include('Admin.layout.datatable_script')    
+<script>
+  // $(document).ready(function() {
 
+//     $('#example').DataTable({
 
+//         processing: true,
 
-    @include('Admin.layout.datatable_script')
+//         serverSide: true,
 
+//         "lengthMenu": [
 
+//             [10, 20, 50, 100, 500],
 
-    <script>
-    $(document).ready(function() {
+//             [10, 20, 50, 100, 500]
 
-        $('#example').DataTable({
+//         ],
 
-            processing: true,
 
-            serverSide: true,
 
-            "lengthMenu": [
+//         pageLength: 10,
 
-                [10, 20, 50, 100, 500],
+//         "order": [
 
-                [10, 20, 50, 100, 500]
+//             [0, "desc"],
 
-            ],
+//             [0, 'desc']
 
+//         ],
 
 
-            pageLength: 10,
 
-            "order": [
+//         ajax: '{{route("get.cardlist")}}',
 
-                [0, "desc"],
 
-                [0, 'desc']
 
-            ],
+//         "columns": [
 
 
 
-            ajax: '{{route("get.cardlist")}}',
+//             {
 
+//                 "data": "srno",
 
+//                 name: 'srno',
 
-            "columns": [
+//                 searchable: false,
 
+//                 orderable: false
 
+//             },
+//             {
 
-                {
+//                 "data": "id",
 
-                    "data": "srno",
+//                 "name": 'id',
 
-                    name: 'srno',
+//                 "searchable": false,
 
-                    searchable: false,
+//                 "visible": true,
 
-                    orderable: false
+//                 orderable: false
 
-                },
-                {
 
-                    "data": "id",
+//             },
 
-                    "name": 'id',
+//             {
 
-                    "searchable": false,
+//                 "data": "title",
 
-                    "visible": true,
+//                 name: 'title',
 
-                    orderable: false
+//                 searchable: false,
 
+//                 orderable: false
 
-                },
+//             },
 
-                {
 
-                    "data": "title",
 
-                    name: 'title',
+//             {
 
-                    searchable: false,
+//                 "data": "image",
 
-                    orderable: false
+//                 orderable: false
 
-                },
 
 
+//             },
 
-                {
+//             // {
 
-                    "data": "image",
+//             //     "data": "price",
 
-                    orderable: false
+//             //     name: 'price',
 
+//             //     searchable: false,
 
+//             //     "orderable": false
 
-                },
+//             // },
 
-                {
 
-                    "data": "price",
 
-                    name: 'price',
+//             {
 
-                    searchable: false,
+//                 "data": "status",
 
-                    "orderable": false
+//                 orderable: false
 
-                },
+//             },
 
+//             {
 
+//                 "data": "action",
 
-                {
+//                 orderable: false
 
-                    "data": "status",
+//             }
 
-                    orderable: false
 
-                },
 
-                {
+//         ],
 
-                    "data": "action",
 
-                    orderable: false
 
-                }
+//         "rowId": "id",
 
+//     });
 
+// });
 
-            ],
 
-
-
-            "rowId": "id",
-
-        });
-
+$(document).ready(function() {
+    $('#example').DataTable({
+        'columnDefs': [ {
+               'targets': [], // column index (start from 0)
+               'orderable': false, // set orderable false for selected columns
+         }]
     });
+});
 
+//  delete card
+function check(id) {
 
+// if (confirm('Are you sure delete this card ?')) {
+toastDelete.fire({
 
+}).then(function(e) {
 
-
-    //  delete card
-
-    function check(id) {
-
-        if (confirm('Are you sure delete this card ?')) {
-
-            var cardid = $('.delete-card' + id).data('id');
-
-
-
-            $.ajax({
-
-                type: 'post',
-
-                url: "{{ route('delete.card.post') }}",
-
-                data: {
-
-                    _token: "{{csrf_token()}}",
-
-                    'id': cardid
-
-
-
-                },
-
-                success: function(data) {
-
-                    location.reload();
-
-                }
-
-            });
-
-        }
-
-    };
-
-
-
-
-
-    //Active Inactive status change 
-
-    function StatusChange(id) {
-
-        var Statusvalue = $(".change-status" + id).text();
-
-
-
-        if (Statusvalue == 'Active') {
-
-            Statusvalue = "Inactive";
-
-        } else {
-
-            Statusvalue = "Active";
-
-        }
-
+    if (e.value === true) {
+        var cardid = $('.delete-card' + id).data('id');
         $.ajax({
-
             type: 'post',
-
-            url: "{{ route('status.change') }}",
-
+            url: "{{ route('delete.card.post') }}",
             data: {
-
                 _token: "{{csrf_token()}}",
-
-                'status_id': id,
-
-                'status': Statusvalue
-
+                'id': cardid
             },
-
             success: function(data) {
 
-                $('#sumess').fadeIn('slow').html('<div class="alert alert-success alert-block">' +
-
-                '<button type="button" class="close" data-dismiss="alert">×</button>' +
-
-                '<strong>' + data + '</strong>' +
-
-                '</div>');
-
-                setTimeout(function() {
-
-                $('#sumess').fadeOut("slow");
-
-                }, 300 );
-
-                if (Statusvalue == 'Active') {
-
-                    $('.changediv' + id).html('<span class="label label-success change-status' + id +
-                        '"  onClick="StatusChange(' + id + ')">' + Statusvalue + '</span>').fadeIn(
-                        'slow');
-
-                } else {
-
-                    $('.changediv' + id).html('<span class="label label-danger change-status' + id +
-                        '"  onClick="StatusChange(' + id + ')">' + Statusvalue + '</span>').fadeIn(
-                        'slow');
-
-                }
-
-
-
+                const obj = JSON.parse(data);
+                console.log(obj.msg);
+                $("#row" + id).remove();
+                success_noti(obj.msg);
+                // location.reload();
             }
 
         });
 
+    } else {
 
+        e.dismiss;
 
     }
-    </script>
+}, function(dismiss) {
+
+    return false;
+
+});
+// }
+
+};
+
+
+//Active Inactive status change 
+
+function StatusChange(id) {
+
+var Statusvalue = $(".change-status" + id).text();
+
+if (Statusvalue == 'Active') {
+
+    Statusvalue = "Inactive";
+
+} else {
+
+    Statusvalue = "Active";
+
+}
+
+$.ajax({
+
+    type: 'post',
+
+    url: "{{ route('status.change') }}",
+
+    data: {
+
+        _token: "{{csrf_token()}}",
+
+        'status_id': id,
+
+        'status': Statusvalue
+
+    },
+
+    success: function(data) {
+
+        // $('#sumess').fadeIn().html('<div class="alert alert-success alert-block">' +
+
+        //     '<button type="button" class="close" data-dismiss="alert">×</button>' +
+
+        //     '<strong>' + data + '</strong>' +
+
+        //     '</div>');
+
+        // setTimeout(function() {
+
+        //     $('#sumess').fadeOut("slow");
+
+        // }, 300);
+
+        success_noti(data);
+        if (Statusvalue == 'Active') {
+
+            $('.changediv' + id).html('<button type="button" class="btn btn-success change-status' +
+                id +
+                '"  onClick="StatusChange(' + id + ')" >' + Statusvalue + '</button>');
+
+        } else {
+
+            $('.changediv' + id).html('<button type="button" class="btn btn-danger change-status' +
+                id +
+                '"  onClick="StatusChange(' + id + ')" >' + Statusvalue + '</button>');
+        }
+    },
+    error: function(errorData) {
+
+        console.log(errorData);
+
+        alert('Please refresh page and try again!');
+
+    }
+
+});
+
+}
+</script>
 
 
 

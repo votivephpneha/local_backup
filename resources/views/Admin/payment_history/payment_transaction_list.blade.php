@@ -47,7 +47,7 @@
                                     <li><a href="{{ url('/admin/dashboard') }}"><i class="fa fa-dashboard"></i>Home</a>
                                     </li>
                                  <li><a href="{{url('admin/payment-list') }}"></i>Payment History</a></li> -->
-                                    <!-- <li class="active"> Payment History</li>
+                            <!-- <li class="active"> Payment History</li>
                                 </ul> -->
                             <!-- </div> -->
                         </div>
@@ -112,26 +112,35 @@
                                         <thead>
 
                                             <tr>
-                                                <th>id#</th>
+                                                <!-- <th>id#</th> -->
                                                 <th>S.no#</th>
-
                                                 <th>Transaction Id</th>
-
                                                 <th>Order Id</th>
-
                                                 <th>Customer</th>
-
                                                 <th>Amount</th>
-
                                                 <th>Payment Status</th>
-
                                                 <th>Date</th>
-
                                                 <th>Action</th>
-
                                             </tr>
-
                                         </thead>
+                                        <tbody>
+                                        @if (!$payhisList->isEmpty())
+                                        <?php $i = 1; ?>
+                                        @foreach ($payhisList as $arr)
+                                         <tr id="row{{ $arr->id }}">
+                                            <td>{{ $i }}</td>
+                                            <td>{{$arr->transaction_id}}</td>
+                                            <td>{{$arr->order_id1}}</td>
+                                            <td>{{$arr->firstname ." ". $arr->lastname}}</td>
+                                            <td>${{number_format($arr->total_amount, 2)}}</td>
+                                            <td>{{$arr->payment_status}}</td>
+                                            <td>{{date('Y-m-d', strtotime($arr->created_at))}}</td>
+                                            <td><button class="btn btn-dark p-2">
+                                            <a href="{{route('view.payment.detail',[$arr->id])}}" class="text-white" style=" color: #FFFFFF;"><i class="fa fa-eye" ></i>View</button></a></td>
+                                         </tr>
+                                        @endforeach 
+                                        @endif
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -156,266 +165,230 @@
 
 
     <script>
+    // $(document).ready(function() {
+
+    //     $('#example').DataTable({
+
+    //         processing: true,
+
+    //         serverSide: true,
+
+    //         "lengthMenu": [
+
+    //             [10, 20, 50, 100, 500],
+
+    //             [10, 20, 50, 100, 500]
+
+    //         ],
+
+
+
+    //         pageLength: 10,
+
+    //         "order": [
+
+    //             [0, "desc"],
+
+    //             [0, 'desc']
+
+    //         ],
+
+
+
+    //         ajax: '{{route("get.paymentranstlist")}}',
+
+
+
+    //         "columns": [{
+    //                 "data": "id",
+
+    //                 "name": 'id',
+
+    //                 "searchable": false,
+
+    //                 "visible": false,
+
+    //                 orderable: false
+
+    //             },
+    //             {
+
+    //                 "data": "srno",
+
+    //                 name: 'srno',
+
+    //                 searchable: false,
+
+    //                 orderable: false
+
+    //             },
+    //             {
+
+    //                 "data": "trans_id",
+
+    //                 "name": 'trans_id',
+
+    //                 "searchable": false,
+
+    //                 "visible": true,
+
+    //                 orderable: false
+
+
+    //             },
+
+    //             {
+
+    //                 "data": "order_id",
+
+    //                 name: 'order_id',
+
+    //                 searchable: false,
+
+    //                 orderable: false
+
+    //             },
+    //             {
+
+    //                 "data": "customer",
+
+    //                 orderable: false
+
+
+
+    //             },
+
+    //             {
+
+    //                 "data": "amount",
+
+    //                 name: 'amount',
+
+    //                 searchable: false,
+
+    //                 "orderable": false
+
+    //             },
+
+
+
+    //             {
+
+    //                 "data": "payment_status",
+
+    //                 orderable: false
+
+    //             },
+    //             {
+
+    //                 "data": "date",
+
+    //                 orderable: false
+
+    //             },
+
+    //             {
+
+    //                 "data": "action",
+
+    //                 orderable: false
+
+    //             }
+    //         ],
+    //         "rowId": "id",
+    //     });
+
+    // });
+
     $(document).ready(function() {
-
-        $('#example').DataTable({
-
-            processing: true,
-
-            serverSide: true,
-
-            "lengthMenu": [
-
-                [10, 20, 50, 100, 500],
-
-                [10, 20, 50, 100, 500]
-
-            ],
-
-
-
-            pageLength: 10,
-
-            "order": [
-
-                [0, "desc"],
-
-                [0, 'desc']
-
-            ],
-
-
-
-            ajax: '{{route("get.paymentranstlist")}}',
-
-
-
-            "columns": [{
-                    "data": "id",
-
-                    "name": 'id',
-
-                    "searchable": false,
-
-                    "visible": false,
-
-                    orderable: false
-
-                },
-                {
-
-                    "data": "srno",
-
-                    name: 'srno',
-
-                    searchable: false,
-
-                    orderable: false
-
-                },
-                {
-
-                    "data": "trans_id",
-
-                    "name": 'trans_id',
-
-                    "searchable": false,
-
-                    "visible": true,
-
-                    orderable: false
-
-
-                },
-
-                {
-
-                    "data": "order_id",
-
-                    name: 'order_id',
-
-                    searchable: false,
-
-                    orderable: false
-
-                },
-
-
-
-                {
-
-                    "data": "customer",
-
-                    orderable: false
-
-
-
-                },
-
-                {
-
-                    "data": "amount",
-
-                    name: 'amount',
-
-                    searchable: false,
-
-                    "orderable": false
-
-                },
-
-
-
-                {
-
-                    "data": "payment_status",
-
-                    orderable: false
-
-                },
-                {
-
-                    "data": "date",
-
-                    orderable: false
-
-                },
-
-                {
-
-                    "data": "action",
-
-                    orderable: false
-
-                }
-
-
-
-            ],
-
-
-
-            "rowId": "id",
-
-        });
-
+    $('#example').DataTable({
+    'columnDefs': [{
+            'targets': [], // column index (start from 0)
+            'orderable': false, // set orderable false for selected columns
+        }]
+    });
     });
 
+//  delete card
+ function check(id) {
+     if (confirm('Are you sure delete this card ?')) {
+         var cardid = $('.delete-card' + id).data('id');
+         $.ajax({
+             type: 'post',
+             url: "{{ route('delete.card.post') }}",
+             data: {
+                 _token: "{{csrf_token()}}",
+                 'id': cardid
+             },
+             success: function(data) {
+                 location.reload();
+             }
 
+         });
 
+     }
 
+ };
 
-    //  delete card
+ //Active Inactive status change 
+ function StatusChange(id) {
+     var Statusvalue = $(".change-status" + id).text();
+     if (Statusvalue == 'Active') {
+         Statusvalue = "Inactive";
+     } else {
+         Statusvalue = "Active";
+     }
+     $.ajax({
 
-    function check(id) {
+         type: 'post',
 
-        if (confirm('Are you sure delete this card ?')) {
+         url: "{{ route('status.change') }}",
 
-            var cardid = $('.delete-card' + id).data('id');
+         data: {
 
+             _token: "{{csrf_token()}}",
 
+             'status_id': id,
 
-            $.ajax({
+             'status': Statusvalue
 
-                type: 'post',
+         },
 
-                url: "{{ route('delete.card.post') }}",
+         success: function(data) {
 
-                data: {
+             $('#sumess').html('<div class="alert alert-success alert-block">' +
 
-                    _token: "{{csrf_token()}}",
+                 '<button type="button" class="close" data-dismiss="alert">×</button>' +
 
-                    'id': cardid
+                 '<strong>' + data + '</strong>' +
 
+                 '</div>').fadeIn('slow');
 
 
-                },
 
-                success: function(data) {
+             if (Statusvalue == 'Active') {
 
-                    location.reload();
+                 $('.changediv' + id).html('<span class="label label-success change-status' + id +
+                     '"  onClick="StatusChange(' + id + ')">' + Statusvalue + '</span>').fadeIn(
+                     'slow');
 
-                }
+             } else {
 
-            });
+                 $('.changediv' + id).html('<span class="label label-danger change-status' + id +
+                     '"  onClick="StatusChange(' + id + ')">' + Statusvalue + '</span>').fadeIn(
+                     'slow');
 
-        }
+             }
 
-    };
 
 
+         }
 
+     });
 
 
-    //Active Inactive status change 
 
-    function StatusChange(id) {
-
-        var Statusvalue = $(".change-status" + id).text();
-
-
-
-        if (Statusvalue == 'Active') {
-
-            Statusvalue = "Inactive";
-
-        } else {
-
-            Statusvalue = "Active";
-
-        }
-
-        $.ajax({
-
-            type: 'post',
-
-            url: "{{ route('status.change') }}",
-
-            data: {
-
-                _token: "{{csrf_token()}}",
-
-                'status_id': id,
-
-                'status': Statusvalue
-
-            },
-
-            success: function(data) {
-
-                $('#sumess').html('<div class="alert alert-success alert-block">' +
-
-                    '<button type="button" class="close" data-dismiss="alert">×</button>' +
-
-                    '<strong>' + data + '</strong>' +
-
-                    '</div>').fadeIn('slow');
-
-
-
-                if (Statusvalue == 'Active') {
-
-                    $('.changediv' + id).html('<span class="label label-success change-status' + id +
-                        '"  onClick="StatusChange(' + id + ')">' + Statusvalue + '</span>').fadeIn(
-                        'slow');
-
-                } else {
-
-                    $('.changediv' + id).html('<span class="label label-danger change-status' + id +
-                        '"  onClick="StatusChange(' + id + ')">' + Statusvalue + '</span>').fadeIn(
-                        'slow');
-
-                }
-
-
-
-            }
-
-        });
-
-
-
-    }
+ }
     </script>
 
 

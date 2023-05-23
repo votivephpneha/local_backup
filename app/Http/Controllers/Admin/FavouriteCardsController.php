@@ -15,7 +15,13 @@ class FavouriteCardsController extends Controller
      */
     public function index()
     {
-     return  view('Admin.favourite_cards.favourite_card_list');  
+      $data['favList'] = DB::table('favourite_cards AS favcard')
+                ->leftJoin('users AS u','u.id','=','favcard.user_id')
+                ->leftJoin('cards AS card','card.id','=','favcard.card_id')
+                ->select('favcard.*','u.*','card.*')
+                ->orderby('favcard.favourite_card_id','DESC')
+                ->get();
+     return  view('Admin.favourite_cards.favourite_card_list')->with($data);  
     }
 
     /**
@@ -81,10 +87,13 @@ class FavouriteCardsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $favourite_card_id = $request->id;
-       
-        $favcard = FavouriteCards::where('favourite_card_id',$favourite_card_id)->delete();
-        return response()->json('success');
+        $favourite_card_id = $request->id;       
+         $favcard = FavouriteCards::where('favourite_card_id',$favourite_card_id)->delete();
+        if ($favcard) {
+            return json_encode(array('status' => 'success','msg' => 'Favourite card has been deleted successfully!'));
+         }else {
+            return json_encode(array('status' => 'error','msg' => 'Some internal issue occured.'));
+         }
     }
 
     // get favourite card list
@@ -141,21 +150,7 @@ class FavouriteCardsController extends Controller
                         // ->orderBy($order_val,$dir_val)
                         ->get();
 
-        $totalFilteredRecord = DB::table('favourite_cards AS favcard')
-                                ->leftJoin('users AS u','u.id','=','favcard.user_id')
-                                ->leftJoin('cards AS card','card.id','=','favcard.card_id')
-                                ->select('favcard.*','u.fname','u.lname','card.card_title')
-                                ->where(function ($query) use ($search_text) {
-                                    $query->where('favcard.favourite_card_id', 'LIKE',"%{$search_text}%")
-                                    ->orWhere('u.fname', 'LIKE',"%{$search_text}%")
-                                    ->orWhere('u.lname', 'LIKE',"%{$search_text}%")
-                                    ->orWhere('card.card_title', 'LIKE',"%{$search_text}%");
-                                })
-                                ->offset($start_val)
-                                ->limit($limit_val)
-                                ->orderBy('favcard.favourite_card_id', 'ASC')
-                                // ->orderBy($order_val,$dir_val)
-                                ->count();
+        $totalFilteredRecord =  $favcard_data->count();
         }
             
         $data_val = array();

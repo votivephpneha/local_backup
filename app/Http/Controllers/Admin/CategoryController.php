@@ -14,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-      return view('Admin/admincategorypages/category_list');
+      $data['catList'] = Category::where('status',1)->orderby('id','DESC')->get();
+      return view('Admin/admincategorypages/category_list')->with($data);
     }
 
      /**  
@@ -23,8 +24,7 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-     
+    {     
      return view('Admin/admincategorypages/create_category');
     }
 
@@ -45,12 +45,16 @@ class CategoryController extends Controller
           'name' => $request->name,
         );
 
-        Category::create($data);
+        $res = Category::create($data);
         
+        if($res){
         return redirect("admin/cardcategorylist")->with(
             "success",
-            "Category added successfully"
+            "Category has been added successfully."
         );
+        }else{
+        return back()->with("failed", "OOPs! Some internal issue occured.");  
+        }
     }
 
     
@@ -81,12 +85,16 @@ class CategoryController extends Controller
         $category = Category::find($id);
         $category->name = $request->name;
         // $category->category_id = $request->parent_id;
-        $category->save();
-
+        $res = $category->save();
+        
+        if($res){
         return redirect("admin/cardcategorylist")->with(
             "success",
-            "category updated successfully"
+            "category has been updated successfully."
         );
+       }else{
+        return back()->with("failed", "OOPs! Some internal issue occured.");
+       }
     }
 
     
@@ -100,12 +108,16 @@ class CategoryController extends Controller
     {
         $id = $request->id;
         $category = Category::find($id);
-        $category->delete();
-        return response()->json('success');
+        $result = $category->delete();
+        if ($result) {
+            return json_encode(array('status' => 'success','msg' => 'Category has been deleted successfully!'));
+         }else {
+            return json_encode(array('status' => 'error','msg' => 'Some internal issue occured.'));
+         }
 
     }
 
-    // get category list
+    // get category list by ajax
     public function getCategorylist(Request $request)
     {
         $totalFilteredRecord = $totalDataRecord = $draw_val = "";
@@ -141,7 +153,7 @@ class CategoryController extends Controller
                             ->where('status',1)
                             ->where(function ($query) use ($search_text) {
                                 $query->where('id', 'LIKE',"%{$search_text}%")
-                                ->orWhere('text_message', 'LIKE',"%{$search_text}%")
+                                ->orWhere('name', 'LIKE',"%{$search_text}%")
                                 ->orWhere('status', 'LIKE',"%{$search_text}%");
         
                             })
@@ -151,18 +163,7 @@ class CategoryController extends Controller
                             // ->orderBy($order_val,$dir_val)
                             ->get();
 
-        $totalFilteredRecord = Category::select("id","category_id", "name","status")
-                             ->where('status',1)
-                            ->where(function ($query) use ($search_text) {
-                                $query->where('id', 'LIKE',"%{$search_text}%")
-                                        ->orWhere('text_message', 'LIKE',"%{$search_text}%")
-                                        ->orWhere('status', 'LIKE',"%{$search_text}%");
-            
-                            })
-                            ->offset($start_val)
-                            ->limit($limit_val)
-                            ->orderBy($order_val,$dir_val)
-                            ->count();
+        $totalFilteredRecord =   $categry_data->count();
         }
             
         $data_val = array();

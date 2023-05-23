@@ -39,12 +39,13 @@ class AuthController extends Controller
         ]);
 
         $userdata = $request->only("email", "password");
-        if (Auth::attempt($userdata)) {
-        // if (Auth::guard("admin")->attempt($userdata)) {
-            $user = Auth::user();
+        //if (Auth::attempt($userdata)) {
+        if (Auth::guard("admin")->attempt($userdata)) {
+            $user = Auth::guard("admin")->user();
+            
            if($user->role == 'admin'){
-            Session::put("name", $user->fname);
-            Session::put("proimg", $user->image);
+            // Session::put("name", $user->fname);
+            // Session::put("proimg", $user->image);
             return redirect("admin/dashboard");
            }
         }
@@ -55,7 +56,7 @@ class AuthController extends Controller
     public function logout()
     {
         Session::flush();
-        Auth::logout();
+        Auth::guard("adms")->logout();
         return Redirect("/admin");
     }
 

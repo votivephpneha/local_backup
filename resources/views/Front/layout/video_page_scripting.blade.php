@@ -26,6 +26,8 @@
   <link href="{{ url('public/assets/css/style.css') }}" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap" rel="stylesheet">
   <style>
     .error{
       color:red;
@@ -262,7 +264,7 @@ $(".close").click(function(){
 
 });
 
-$(".editor-add-basket").click(function(){
+ $(".editor-add-basket").click(function(){
     var cart_id_array = localStorage.getItem("cart_id_array");
     //console.log("cart_id_array",cart_id_array);
     if(cart_id_array){
@@ -291,9 +293,6 @@ $(".editor-add-basket").click(function(){
     
   });
 
-// $(".editor-add-basket").click(function(){
-//   localStorage.setItem("cart_item_status","true");
-// });
 </script>
   @yield('current_page_js')
 </body>

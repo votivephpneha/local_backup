@@ -14,7 +14,8 @@ class AdminPagesController extends Controller
      */
     public function index()
     {
-       return view("Admin.admincpages.page_list");
+        $data['pageList'] = Page::orderby('id','DESC')->get();
+       return view("Admin.admincpages.page_list")->with($data);
     }
 
     /**
@@ -54,9 +55,14 @@ class AdminPagesController extends Controller
         $page->sub_title = $request->sub_title;
         $page->page_status = $request->page_status;
 
-        $page->save();
-       
-        return redirect("admin/content-pagelist")->with('success','Page Inserted Successfully!');
+        $res = $page->save();
+        
+        if($res){
+        return redirect("admin/content-pagelist")->with('success','Page content has been added Successfully.');
+        }else{
+        return back()->with("failed", "OOPs! Some internal issue occured.");   
+        }
+     
     }
 
     /**
@@ -114,9 +120,14 @@ class AdminPagesController extends Controller
             $pagefind->sub_title = $request->sub_title;
             $pagefind->page_status = $request->page_status; 
             
-            $pagefind->save();
-
-            return redirect("admin/content-pagelist")->with('success','Page Updated Successfully!');
+            $res = $pagefind->save();
+            
+            if($res){
+            return redirect("admin/content-pagelist")->with('success','Page content has been  updated successfully.');
+            }else{
+            return back()->with("failed", "OOPs! Some internal issue occured.");
+            }
+           
         }
     }
 
@@ -130,11 +141,16 @@ class AdminPagesController extends Controller
     {
         $id = $request->id;
         $pages = Page::find($id);
-        $pages->delete();
-        return response()->json('success');
+        $result = $pages->delete();
+
+        if ($result) {
+            return json_encode(array('status' => 'success','msg' => 'Page has been deleted successfully!'));
+         }else {
+            return json_encode(array('status' => 'error','msg' => 'Some internal issue occured.'));
+         }
     }
 
-    //  get page list
+    //  get page list by ajax
     public function getPagelist(Request $request)
     {
         $totalFilteredRecord = $totalDataRecord = $draw_val = "";
@@ -178,17 +194,7 @@ class AdminPagesController extends Controller
                             // ->orderBy($order_val,$dir_val)
                             ->get();
 
-        $totalFilteredRecord = Page::select("id","page_title","page_status")
-                            ->where(function ($query) use ($search_text) {
-                                $query->where('id', 'LIKE',"%{$search_text}%")
-                                        ->orWhere('page_title', 'LIKE',"%{$search_text}%")
-                                        ->orWhere('page_status', 'LIKE',"%{$search_text}%");
-            
-                            })
-                            ->offset($start_val)
-                            ->limit($limit_val)
-                            ->orderBy($order_val,$dir_val)
-                            ->count();
+        $totalFilteredRecord = $page_data->count();
         }
             
         $data_val = array();
@@ -205,9 +211,9 @@ class AdminPagesController extends Controller
             $nestedData['title'] = $value->page_title;
 
             if($value->page_status == 1){
-                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><span class="label label-success change-status'.$value->id.'" onClick="ContentpageStatusChange('.$value->id.')">Active</span></div>';
+                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><button type="button" class="btn btn-success change-status'.$value->id.'"  onClick="ContentpageStatusChange('.$value->id.')">Active</button></div>';
             }else{
-                $nestedData['status'] = '<div class="changediv'.$value->id.' status-change"><span class="label label-danger change-status'.$value->id.'" onClick="ContentpageStatusChange('.$value->id.')">Inactive</span></div>';
+                $nestedData['status'] ='<div class="changediv'.$value->id.' status-change"><button type="button" class="btn btn-danger change-status'.$value->id.'"  onClick="ContentpageStatusChange('.$value->id.')">Inactive</button></div>';
             } 
 
             $nestedData['action'] = '<button class="btn btn-dark p-2" >
@@ -247,6 +253,6 @@ class AdminPagesController extends Controller
         ->update(['page_status' => $newstatus
                  ]
                 );
-       return response()->json('Status changed successfully !');
+       return response()->json('Page status changed successfully !');
     }
 }

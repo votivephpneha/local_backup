@@ -8,8 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{{asset('public/images/favicon.ico')}}" type="image/ico" />
 
-    <title>Birthday Cards| </title>
-
+    <title>Admin|Login </title>
     @include('Admin.custom_css')
   </head>
 
@@ -53,7 +52,7 @@
                   Log in
                  </button>
                 <!-- <a class="" href="index.html"></a> -->
-                <a class="reset_pass" href="">Lost your password?</a>
+                <!-- <a class="reset_pass" href="">Lost your password?</a> -->
               </div>
 
               <div class="clearfix"></div>

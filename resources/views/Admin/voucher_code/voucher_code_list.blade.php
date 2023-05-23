@@ -220,9 +220,9 @@
         }, 300 );
   
       if(Statusvalue == 'Active'){        
-      $('.changediv' +id).html('<span class="label label-success change-status'+id+'"  onClick="VoucherStatusChange('+id+')">'+Statusvalue+'</span>' ).fadeIn('slow');
+      $('.changediv' + id).html('<button type="button" class="btn btn-success change-status' + id +'"  onClick="VoucherStatusChange(' + id + ')" >' + Statusvalue + '</button>');
       }else{
-        $('.changediv'+id).html('<span class="label label-danger change-status'+id+'"  onClick="VoucherStatusChange('+id+')">'+Statusvalue+'</span>' ).fadeIn('slow');
+        $('.changediv' + id).html('<button type="button" class="btn btn-danger change-status' + id +'"  onClick="VoucherStatusChange(' + id + ')" >' + Statusvalue + '</button>');
       }
       
     }

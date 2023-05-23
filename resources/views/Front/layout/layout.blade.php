@@ -230,6 +230,45 @@ $(function() {
     }
   });
 });  
+ $(function() {
+  // Initialize form validation on the registration form.
+  // It has the name attribute "registration"
+  $("form[name='checkout_form']").validate({
+    // Specify validation rules
+    rules: {
+      // The key name on the left side is the name attribute
+      // of an input field. Validation rules are defined
+      // on the right side
+      fname: "required",
+      lname: "required",
+      address: "required",
+      city: "required",
+      country: "required",
+      post_code: "required",
+      phone_no: "required",
+      email_address: "required"
+      
+    },
+    // Specify validation error messages
+    messages: {
+      fname: "Please provide a first name",
+      lname: "Please provide a last name",
+      address: "Please provide address",
+      city: "Please provide city",
+      country: "Please provide country",
+      post_code: "Please provide a postal code",
+      phone_no: "Please provide a phone no",
+      email_address: "Please provide a email address"
+      
+      
+    },
+    // Make sure the form is submitted to the destination defined
+    // in the "action" attribute of the form when valid
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+});
 //  $(function() {
 //   // Initialize form validation on the registration form.
 //   // It has the name attribute "registration"
@@ -263,17 +302,18 @@ $(".close").click(function(){
   });
 
 });
- var sum = 0;
- $(".cart_price").each(function(i,val){
-    var card_price = $.trim($(this).html()).replace("$","");
-    sum = parseInt(sum) + parseInt(card_price);
-    console.log("cart_price",$.trim($(this).html()).replace("$",""));
+var sum = 0;
+ $(".card_type").each(function(i,val){
+   console.log("cart_price1",val);
+    // var card_price = $.trim($(this).html()).replace("$","");
+    // sum = parseInt(sum) + parseInt(card_price);
+    // console.log("cart_price",$.trim($(this).html()).replace("$",""));
 
  });
- console.log("cart_price",sum.toFixed(2));
- $(".total_price").html("$"+sum.toFixed(2));
+ // console.log("cart_price",sum.toFixed(2));
+ // $(".total_price").html("$"+sum.toFixed(2));
 
-function qtyInc(event,cart_id,card_id,card_sizes,cart_price,size_qty){
+function qtyInc(event,cart_id,cart_price,size_qty){
   //alert(cart_id);
   
 
@@ -297,14 +337,22 @@ function qtyInc(event,cart_id,card_id,card_sizes,cart_price,size_qty){
     $.ajax({
       type: "post",
       url: "{{ url('/post_cart') }}",
-      data: {card_id:card_id,card_sizes:card_sizes,qty:qty_value,_token:"{{ csrf_token() }}"},
+      data: {cart_id:cart_id,qty:qty_value,_token:"{{ csrf_token() }}"},
       cache: false,
       success: function(data){
          //$("#resultarea").text(data);
       }
     });
+
+    var price_sum = 0;
     
-    
+    $(".cart_price").each(function(i,val){
+      var price = $.trim($(this).html().replace("$",""));
+      
+      price_sum = parseInt(price_sum) + parseInt(price);
+    });
+    console.log("price",price_sum);
+    $(".total_price").html("$"+price_sum.toFixed(2));
   }
 
   if(event == 'minus'){
@@ -318,9 +366,70 @@ function qtyInc(event,cart_id,card_id,card_sizes,cart_price,size_qty){
 
     $("#qty-"+cart_id).val();
     $(".cart_price-"+cart_id).text("$"+price.toFixed(2));
+
+    $.ajax({
+      type: "post",
+      url: "{{ url('/post_cart') }}",
+      data: {cart_id:cart_id,qty:qty_value,_token:"{{ csrf_token() }}"},
+      cache: false,
+      success: function(data){
+         //$("#resultarea").text(data);
+      }
+    });
+
+    var price_sum = 0;
+    
+    $(".cart_price").each(function(i,val){
+      var price = $.trim($(this).html().replace("$",""));
+      
+      price_sum = parseInt(price_sum) + parseInt(price);
+    });
+    console.log("price",price_sum);
+    $(".total_price").html("$"+price_sum.toFixed(2));
   }
 }
 
+var cart_id_array = localStorage.getItem("cart_id_array");
+  var arry_json = JSON.parse(cart_id_array);
+
+  
+  $.each(arry_json,function(i,val){
+      console.log("val",val);
+
+    $.ajax({
+      type: "GET",
+      url: "{{ url('cart_table') }}",
+      data: {cart_id:val},
+      cache: false,
+      success: function(data){
+        
+        
+      }
+    });
+    
+  });
+
+  $(".user_logout").click(function(){
+    localStorage.removeItem("cart_id_array");
+  });
+
+  function clickSize(size_value,card_size_price){
+    //alert(size_value);
+    $(".card_size_price").val(card_size_price);
+  }
+
+  function remove_fav(favourite_card_id){
+    $.ajax({
+      type: "GET",
+      url: "{{ url('user/favourites_delete') }}",
+      data: {favourite_card_id:favourite_card_id},
+      cache: false,
+      success: function(data){
+        window.location.href = "{{ url('user/user_favourites') }}";
+        
+      }
+    });
+  }
 </script>
   @yield('current_page_js')
 </body>

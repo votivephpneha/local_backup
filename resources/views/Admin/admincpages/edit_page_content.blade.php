@@ -9,6 +9,11 @@
 
 
 @section('current_page_js')
+<script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+       $('.ckeditor').ckeditor();
+    });
 
 @endsection
 
@@ -35,6 +40,15 @@
     </div>
     <div class="clearfix"></div>
     <div class="row">
+    @if(Session::has('failed'))
+      <div class="alert alert-danger alert-block">
+
+          <button type="button" class="close" data-dismiss="alert">×</button>
+
+          <strong>{{ Session::get('failed')}}</strong>
+
+      </div>
+      @endif
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
@@ -89,7 +103,7 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Description">Description <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                <textarea  name="page_content"  class="form-control" rows="12" cols="50">{{$pagedata->page_content}}</textarea>
+                <textarea  name="page_content"  class="form-control ckeditor" rows="12" cols="50">{{$pagedata->page_content}}</textarea>
                   <!-- <input type="text" id="last-name" name="last_name"  class="form-control col-md-7 col-xs-12"> -->
                   @if($errors->has('page_content'))
 

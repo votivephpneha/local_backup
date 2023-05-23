@@ -111,18 +111,23 @@
           			<form  name="post_sizes_form" method="post" action="{{ url('post_sizes') }}">
           				@csrf
           				<input type="hidden" name="card_id" value="{{ $card->id }}" >
-	          			
+	          			<input type="hidden" name="card_size_price" value="" class="card_size_price">
 	          			@foreach ($card_sizes as $c_size)
 	          				<div class="card_size_name">
 							  <div class="card_radio">
 										<input type="hidden" name="card_qty" value="{{ $c_size->card_size_qty }}">
-										<input type="radio" name="c_size" value="{{ $c_size->id  }}" required="">&nbsp;{{ $c_size->card_type }}
+										<input type="radio" name="c_size" value="{{ $c_size->id  }}" required="" onclick="clickSize(this.value,'{{ $c_size->card_price }}')">&nbsp;{{ $c_size->card_type }}
 							  </div>
 							  <div class="card_grid_info">
 								<div class="card_name_size">{{ $c_size->card_size }}</div>
 							  </div>
 							  <div class="card_price">
-								<div class="card_name_price">$20</div>
+								<div class="card_name_price">
+									<?php
+										$card_price = $c_size->card_price;
+										echo "$".number_format((float)$card_price, 2, '.', '');
+									?>
+								</div>
 							  </div>	  
 								<div class="inner_card_icon">  
 								  <span><i class='bx bx-gift'></i></span>

@@ -10,9 +10,15 @@
 @section('content')
 <div class="container video_page">
 	<div class="video_image_content">
+		@if ($message = Session::get('success'))
+        <div class="alert alert-success">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          {{ $message }}
+        </div>
+         @endif
 		<div class="video_qr">
 			<video width="100%" height="auto" controls>
-			  <source src="{{ url('public/upload/videos') }}/{{ $db_card_data->video }}" type="video/mp4">
+			  <source src="{{ url('public/upload/videos') }}/{{ $db_card_data->video_name }}" type="video/mp4">
 			  
 			  Your browser does not support the video tag.
 			</video>
@@ -24,17 +30,20 @@
 				<form class="replace_btn" id="attachUpload" method="post" action="{{ url('post_video') }}" enctype="multipart/form-data">
 					@csrf
 					<input type="hidden" name="qr_img_val" value="" class="qr_image">
-					<input type="hidden" name="card_id" value="{{ $db_card_data->card_id }}">
+					<input type="hidden" name="card_id" value="{{ $card_id }}">
 					<input type="hidden" name="card_size_id" value="{{ $card_size_id }}">
 					<input type="file" name="add_video_file" id="replace_video">
-					<label class="label-add-video" for="replace_video">Replace Video</label>
+					<input type="hidden" name="cart_id" value="{{ $cart_id }}">
+					<label class="label-add-video" for="replace_video">Replace Video <i class='bx bx-sync'></i></label>
 					<!-- <input type="submit" name="add_video_btn" value="Replace Video"> -->
 				</form>
 				<form class="del_video_btn" method="post" action="{{ url('delete_video') }}">
 					@csrf
-					<input type="hidden" name="card_id" value="{{ $db_card_data->card_id }}">
+					<input type="hidden" name="card_id" value="{{ $card_id }}">
 					<input type="hidden" name="card_size_id" value="{{ $card_size_id }}">
-					<input type="submit" name="delete_video_btn" value="Delete Video">
+					<input type="hidden" name="cart_id" value="{{ $cart_id }}">
+					<button type="submit" name="delete_video_btn">Delete Video<i class='bx bx-trash'></i></button>
+					<!-- <input type="submit" name="delete_video_btn" value="Delete Video"> -->
 				</form>
 			</div>	
 		</div>
@@ -80,7 +89,7 @@
     	if($("#checkbox").prop('checked') != true){
 	    	$(".agree_bx .chk_cond").append("<div style='color:red;'>Please check Terms & Conditions checkbox</div>");
 		}else{
-			$(".countinue_btn a").attr("href","{{ url('/card_editor') }}/{{ $db_card_data->card_id }}/{{ $card_size_id }}");
+			$(".countinue_btn a").attr("href","{{ url('/card_editor') }}/{{ $card_id }}/{{ $card_size_id }}");
 		}
     });
     

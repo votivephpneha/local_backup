@@ -110,7 +110,7 @@
                      </div>-->
                   <div class="myOrderActnBox">
                      <div class="myOrderDtelBtn">
-                         <!-- <a href=" cd" target="_blank">View Reciept</a> -->
+                         <a href="{{route('view.payment.invoice',request()->route('id'))}}" class="btn btn-dark  active" role="button">Download Invoice</a>
                      </div>
                      </div>
                </div>
@@ -122,7 +122,7 @@
                      <tr>
                         <th>Subtotal</th>
                         <th>Discount</th>
-                        <th>Postage Costs:</th>
+                        <th>Tax:</th>
                         <th>Total  Amount</th>
                         <th>Payment Type</th>
                         <th>Transaction ID</th>
@@ -131,7 +131,8 @@
                      <tr>
                         <td>${{number_format($paytrandata[0]->sub_total, 2)}}</td>
                         <td>${{number_format($paytrandata[0]->discount_fee, 2)}}</td>
-                        <td>${{number_format($paytrandata[0]->postage_costs, 2)}}</td>
+                        <!-- <td>${{number_format($paytrandata[0]->postage_costs, 2)}}</td> -->
+                        <td>$0.00</td>
                         <td>${{number_format($paytrandata[0]->total_amount, 2)}}</td>
                         <td>{{$paytrandata[0]->payment_type}}</td>
                         <td>{{$paytrandata[0]->transaction_id}}</td>

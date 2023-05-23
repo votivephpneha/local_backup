@@ -16,7 +16,13 @@ class CardSizeController extends Controller
      */
     public function index()
     {
-      return  view('Admin.admincardsizepages.card_size_list');
+      $data['cardsizeList'] = DB::table('card_sizes')
+                            ->leftJoin('cards AS card','card.id','=','card_sizes.card_id')
+                            ->select('card_sizes.*','card.card_title') 
+                            ->orderby('card.id','DESC')
+                            ->get();
+
+      return  view('Admin.admincardsizepages.card_size_list')->with($data);
     }
 
     /**
@@ -54,12 +60,17 @@ class CardSizeController extends Controller
           'card_size_qty' => $request->card_quantity
         );
 
-        CardSize::create($data);
+        $res = CardSize::create($data);
         
+        if($res){
         return redirect("admin/card-size-list")->with(
             "success",
-            "Card size added successfully"
+            "Card size has been added successfully."
         );
+        }else{
+       return back()->with("failed", "OOPs! Some internal issue occured."); 
+        }
+        
     }
 
     /**
@@ -116,11 +127,16 @@ class CardSizeController extends Controller
             $cardsizefind->card_id = $request->card;
             $cardsizefind->card_price = $request->card_price;
             $cardsizefind->card_size_qty = $request->card_quantity;
-            $cardsizefind->save();
+            $res = $cardsizefind->save();
+
+            if($res){
             return redirect("admin/card-size-list")->with(
                 "success",
-                "Card size updated successfully !"
+                "Card size has been  updated successfully."
             );
+            }else{
+            return back()->with("failed", "OOPs! Some internal issue occured.");   
+            }            
         }
     }
 
@@ -134,8 +150,13 @@ class CardSizeController extends Controller
     {
         $id = $request->id;
         $cardsize = CardSize::find($id);
-        $cardsize->delete();
-        return response()->json('success');
+        $result = $cardsize->delete();
+
+        if ($result) {
+            return json_encode(array('status' => 'success','msg' => 'Card size has been deleted successfully!'));
+         }else {
+            return json_encode(array('status' => 'error','msg' => 'Some internal issue occured.'));
+         }
     }
     
     // get card size list
@@ -193,22 +214,7 @@ class CardSizeController extends Controller
                         // ->orderBy($order_val,$dir_val)
                         ->get();
 
-        $totalFilteredRecord = DB::table('card_sizes')
-                            ->leftJoin('cards AS card','card.id','=','card_sizes.card_id')
-                            ->select('card_sizes.*','card.card_title')
-                            ->where(function ($query) use ($search_text) {
-                                $query->where('card_sizes.id', 'LIKE',"%{$search_text}%")
-                                ->orWhere('card_sizes.card_type', 'LIKE',"%{$search_text}%")
-                                ->orWhere('card_sizes.card_size', 'LIKE',"%{$search_text}%")
-                                ->orWhere('card_sizes.card_size_qty', 'LIKE',"%{$search_text}%")
-                                ->orWhere('card_sizes.card_price', 'LIKE',"%{$search_text}%")
-                                ->orWhere('card.card_title', 'LIKE',"%{$search_text}%");
-                                })
-                            ->offset($start_val)
-                            ->limit($limit_val)
-                            ->orderBy('card_sizes.id', 'ASC')
-                            // ->orderBy($order_val,$dir_val)
-                            ->count();
+        $totalFilteredRecord =  $cardsize_data->count();
         }
             
         $data_val = array();

@@ -44,6 +44,17 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+           
+        'customer' => [
+            'driver' => 'session',
+            'provider' => 'customers',
+        ],
+        'adm' => [
+            'driver' => 'session',
+            'provider' => 'adms',
+        ],
+   
+
     ],
 
     /*
@@ -73,7 +84,14 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
+        'adms' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+        'customers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Customer::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -102,6 +120,7 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
     ],
 
     /*

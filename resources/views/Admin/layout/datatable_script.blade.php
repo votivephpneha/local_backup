@@ -9,6 +9,10 @@
 
 <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script> 
+
+<script src="{{ asset('public/notifications/notification.js') }}"></script>
+
 <script>
 setTimeout(function() {
 $('.alert-success').fadeOut('slow');
