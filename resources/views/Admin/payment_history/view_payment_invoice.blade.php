@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Payment Invoice</title>
+    <!-- <link rel="icon" href="{{$src}}" type="image/ico" /> -->
 </head>
 <style type="text/css">
     body{
@@ -87,12 +88,12 @@
 <div class="add-detail mt-10">
     <div class="w-50 float-left mt-10">
         <p class="m-0 pt-5 text-bold w-100">Invoice Id - <span class="gray-color">{{$invoicenum }}</span></p>
-        <p class="m-0 pt-5 text-bold w-100">Order Id - <span class="gray-color">{{$paymentdata[0]->order_id1 }}</span></p>
+        <p class="m-0 pt-5 text-bold w-100">Order Id - <span class="gray-color">{{$paymentdata[0]->order_id }}</span></p>
         <p class="m-0 pt-5 text-bold w-100">Order Date - <span class="gray-color">{{date('Y-m-d', strtotime($paymentdata[0]->created_at))}}</span></p>
     </div>
     <div class="float-right" style="">
-            <h1>Birthday Store!</h1>
-        <!-- <img src="" alt="" style="width: 150px; height: 150px;"> -->
+            <!-- <h1>Birthday Store!</h1> -->
+        <img src="{{$src}}" alt="" style="width: 100px; height: 55px; margin-right:30px;">
     </div>
     <div style="clear: both;"></div>
 </div>
@@ -113,10 +114,10 @@
             </td>
             <td>
                 <div class="box-text">
-                    <p><strong>{{$paymentdata[0]->firstname ." ". $paymentdata[0]->lastname}}</p>
-                    <p>{{ $paymentdata[0]->address }}</p>
+                    <p><strong>{{$paymentdata[0]->fname ." ". $paymentdata[0]->lname}}</p>
+                    <p>{{ $paymentdata[0]->address }},{{$paymentdata[0]->city}},{{$paymentdata[0]->state}} {{$paymentdata[0]->postal_code}}</p>
                     <p>Email: {{$paymentdata[0]->email}} </p>                     
-                    <p>Contact:{{$paymentdata[0]->phone}}</p>
+                    <p>Contact:{{$paymentdata[0]->phone_no}}</p>
                 </div>
             </td>
         </tr>
@@ -129,30 +130,37 @@
             <th class="w-50">Shipping Method</th>
         </tr>
         <tr>
-            <td>{{ $paymentdata[0]->payment_type }}</td>
-            <td>Free Shipping - Free Shipping</td>
+            <td>{{ $paymentdata[0]->payment_method }}</td>
+            <!-- <td>Free Shipping - Free Shipping</td> -->
+            <td></td>
         </tr>
     </table>
 </div>
 <div class="table-section bill-tbl w-100 mt-10">
     <table class="table w-100 mt-10">
         <tr>    
-            <th class="w-50">Product Name</th>
+            <th class="w-50">Card Title</th>
+            <th class="w-50">Card Size</th>
             <th class="w-50">Price</th>
             <th class="w-50">Qty</th>
             <th class="w-50">Subtotal</th>
             <th class="w-50">Tax Amount</th>
             <th class="w-50">Grand Total</th>
         </tr>
+        @foreach($card_details as $data)
         <tr align="center">
             <!-- <td>M101</td> -->
-            <td>{{$paymentdata[0]->card_title}}</td>
-            <td>${{number_format($paymentdata[0]->card_price, 2)}}</td>
-            <td>{{$paymentdata[0]->card_qty}}</td>
-            <td>${{number_format($paymentdata[0]->sub_total, 2)}}</td>
-            <td>0.00</td>
-            <td>${{number_format($paymentdata[0]->total, 2)}}</td>
+          
+            <td>{{$data->card_title}}</td>
+            <td>{{$data->card_size}}</td>
+            <td>${{number_format($data->price, 2)}}</td>
+            <td>{{$data->qty}}</td>
+            <td>${{number_format($data->card_price, 2)}}</td>
+            <td>$0.00</td>
+            <td>${{number_format($data->card_price, 2)}}</td>
+           
         </tr>
+        @endforeach
       
         <tr>
             <td colspan="7">

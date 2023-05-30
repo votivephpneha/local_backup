@@ -71,16 +71,16 @@
                <div class="myOrderDtelBox">
                   <div class="myOrderID project_detail">
                   <p class="title">Order ID:</p>
-                  <p>{{$paytrandata[0]->order_id1}}</p>
+                  <p>{{$paytrandata[0]->order_id}}</p>
                   
                   </div>
                   <div class="myOrderDtel project_detail">
                   <p class="title">Order By:</p>
-                  <p>{{$paytrandata[0]->firstname." ". $paytrandata[0]->lastname}}</p>
+                  <p>{{$paytrandata[0]->fname." ". $paytrandata[0]->lname}}</p>
                   
                   <ul class="list-unstyled Myorderadd">
-                     <li><i class="fa fa-building"></i> Address#: {{$paytrandata[0]->address}} </li>
-                     <li><i class="fa fa-phone"></i> Phone #: {{$paytrandata[0]->phone}} </li>
+                     <li><i class="fa fa-building"></i> Address#: {{$paytrandata[0]->address}},{{$paytrandata[0]->city}},{{$paytrandata[0]->state}} {{$paytrandata[0]->postal_code}} </li>
+                     <li><i class="fa fa-phone"></i> Phone #: {{$paytrandata[0]->phone_no}} </li>
                      <li><i class="fa fa-envelope"></i> Email #: {{$paytrandata[0]->email}} </li>
                   </ul>                 
                   </div>
@@ -122,21 +122,21 @@
                      <tr>
                         <th>Subtotal</th>
                         <th>Discount</th>
-                        <th>Tax:</th>
+                        <th>Tax(%):</th>
                         <th>Total  Amount</th>
                         <th>Payment Type</th>
-                        <th>Transaction ID</th>
+                        <!-- <th>Transaction ID</th> -->
                         <th>Payment Status</th>
                      </tr>
                      <tr>
                         <td>${{number_format($paytrandata[0]->sub_total, 2)}}</td>
-                        <td>${{number_format($paytrandata[0]->discount_fee, 2)}}</td>
+                        <td>$0.00</td>
                         <!-- <td>${{number_format($paytrandata[0]->postage_costs, 2)}}</td> -->
                         <td>$0.00</td>
-                        <td>${{number_format($paytrandata[0]->total_amount, 2)}}</td>
-                        <td>{{$paytrandata[0]->payment_type}}</td>
-                        <td>{{$paytrandata[0]->transaction_id}}</td>
-                        <td style="color: green;">{{$paytrandata[0]->payment_status}}</td>
+                        <td>${{number_format($paytrandata[0]->total, 2)}}</td>
+                        <td>{{$paytrandata[0]->payment_method}}</td>
+                        <!-- <td>{{$paytrandata[0]->transaction_id}}</td> -->
+                        <td style="color: green;">{{$paytrandata[0]->pay_status}}</td>
                      </tr>
                   </table>
                   </div>

@@ -139,7 +139,7 @@ $('#order_status').on('change', function() {
                                     From
                                     <address>
                                         <strong>{{$admindata->fname}} {{$admindata->lname}}</strong>
-                                        <br>{{$admindata->address}}
+                                        <br>Address: {{$admindata->address}}
                                         <!-- <br> -->
                                         <br>Phone: {{$admindata->phone}}
                                         <br>Email: {{$admindata->email}}<br><br>
@@ -154,6 +154,9 @@ $('#order_status').on('change', function() {
                                         <?php if(!empty($orderdetail[0]->cancel_reason)){ ?>
                                         <b>Cancel Reason:</b> {{$orderdetail[0]->cancel_reason  }}
                                         <?php } ?>
+                                        <?php if(!empty($orderdetail[0]->order_notes)){ ?>
+                                        <b>Order Note:</b> {{$orderdetail[0]->order_notes  }}
+                                        <?php } ?>
                                     </address>
                                 </div>
                                 <!-- /.col -->
@@ -161,7 +164,7 @@ $('#order_status').on('change', function() {
                                     To
                                     <address>
                                         <strong>{{$orderdetail[0]->fname}} {{$orderdetail[0]->lname }}</strong>
-                                        <br>{{$orderdetail[0]->address}}
+                                        <br>Address: {{$orderdetail[0]->address}},{{$orderdetail[0]->city}},{{$orderdetail[0]->state}} {{$orderdetail[0]->postal_code}}
                                         <br>Phone: {{$orderdetail[0]->phone_no}}
                                         <br>Email: {{$orderdetail[0]->email}}
                                     </address>
@@ -197,21 +200,31 @@ $('#order_status').on('change', function() {
                                                 <th>Card Title</th>
                                                 <th>Card Size</th>
                                                 <th>Price</th>
-                                                <!-- <th style="width: 59%">Description</th> -->
+                                                <th style="width: ">Qr link</th>
                                                 <th>Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                          @if (!$card_details->isEmpty())
+                                           @foreach($card_details as $data)
                                             <tr>
-                                                <td>{{$orderdetail[0]->card_qty}}</td>
-                                                <td>{{$orderdetail[0]->card_title}}</td>
-                                                <td>{{$orderdetail[0]->card_size}}</td>
-                                                <td>${{number_format($orderdetail[0]->card_price, 2)}}</td>
-                                                <!-- <td>El snort testosterone trophy driving gloves handsome gerry Richardson helvetica tousled street art master testosterone trophy driving gloves handsome gerry Richardson
-                </td> -->
-                                                <td>${{number_format($orderdetail[0]->card_price * $orderdetail[0]->card_qty, 2)}}
+                                                <td>{{$data->qty}}</td>
+                                                <td>{{$data->card_title}}</td>
+                                                <td>{{$data->card_size}}</td>
+                                                <td>${{number_format($data->price, 2)}}</td>
+                                                @if($data->qr_image_link == "")
+                                                <td>No link
+                                                </td>
+                                                @else
+                                                <td><a href="{{ $data->qr_image_link }}" target="_blank">Qr Link</a>
+                                                </td>
+                                                @endif
+                                                <td>${{number_format($data->card_price, 2)}}
                                                 </td>
                                             </tr>
+                                            @endforeach
+                                            @endif
+                                           
                                         </tbody>
                                     </table>
                                 </div>
@@ -234,7 +247,7 @@ $('#order_status').on('change', function() {
                                             <tbody>
                                                 <tr>
                                                     <th style="width:50%">Subtotal:</th>
-                                                    <td> ${{number_format($orderdetail[0]->card_price * $orderdetail[0]->card_qty, 2)}}</td>
+                                                    <td> ${{number_format($orderdetail[0]->sub_total, 2)}}</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Tax(%):</th>
@@ -246,7 +259,7 @@ $('#order_status').on('change', function() {
                                                 </tr>
                                                 <tr>
                                                     <th>Total:</th>
-                                                    <td>${{number_format($orderdetail[0]->card_price * $orderdetail[0]->card_qty, 2)}}</td>
+                                                    <td>${{number_format($orderdetail[0]->total, 2)}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>

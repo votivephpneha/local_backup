@@ -4,7 +4,7 @@
 
         <footer>
             <div class="pull-right">
-            ©2023 Brithday store. <a href="#">Brithday Cards</a>
+            ©2023 <a href="#">Brithday store.</a>
             </div>
             <div class="clearfix"></div>
         </footer>

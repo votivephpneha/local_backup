@@ -6,6 +6,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Auth ;
 use DB;
+use Mail;
+
 
 class OrderController extends Controller
 {
@@ -16,24 +18,12 @@ class OrderController extends Controller
      */
     public function index()
     {
-    $data['orderList'] =  DB::table('order')
-                        ->leftJoin('users AS u','u.id','=','order.customer_id')
-                        ->leftJoin('order_details AS detail','detail.order_id','=','order.order_id')
-                        ->leftJoin('cards AS card','card.id','=','detail.card_id')
-                        ->leftJoin('card_sizes AS size','size.id','=','detail.card_size_id')
-                        ->select('order.*','card.card_title','card.price')
+   
+    $data['orderList']  = DB::table("order")
+                        ->select("order.*")
+                        ->leftJoin("order_details","order_details.order_id","=","order.order_id")
                         ->orderby('order.id','DESC')
-                        // ->groupBy('order.id')
-                        ->get();
-
-    // DB::table("order")
-
-    // ->select("order.*","order_details.*",'card.card_title')
-    // ->leftJoin("order_details","order_details.order_id","=","order.order_id")
-    // ->leftJoin('cards AS card','card.id','=','order_details.card_id')
-    // ->orderby('order.id','DESC')
-    // ->groupBy('order.id')->get();
-     
+                        ->groupBy('order.id')->get(); 
      return view("Admin.order_management.order_list")->with($data);
     }
 
@@ -66,18 +56,27 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $orderdetail = DB::table('order')
-                    ->leftJoin('users AS u','u.id','=','order.customer_id')
-                    ->leftJoin('order_details AS detail','detail.order_id','=','order.order_id')
-                    ->leftJoin('cards AS card','card.id','=','detail.card_id')
-                    ->leftJoin('card_sizes AS size','size.id','=','detail.card_size_id')
-                    ->select('order.*','card.card_title','card.price','size.*','detail.qty as card_qty')
-                    ->where('order.id',$id)
-                    ->get(); 
-                    
+
+        $orderdetail = DB::table("order")
+                      ->select("order.*")
+                      ->leftJoin("order_details","order_details.order_id","=","order.order_id")
+                      ->where('order.id',$id)
+                      ->groupBy('order.id')
+                      ->get();
+
+        $card_details = DB::table("order_details")
+                        ->select("order_details.*","cards.card_title","card_sizes.card_size","card_sizes.card_price As price","videos.qr_image_link")
+                        ->leftJoin("order","order.order_id","=","order_details.order_id")
+                        ->leftJoin("cards","cards.id","=","order_details.card_id")
+                        ->leftJoin("card_sizes","card_sizes.id","=","order_details.card_size_id")
+                        ->leftJoin("videos","videos.video_id","=","order_details.video_id")   
+                        ->where('order.id',$id)                    
+                        ->get();
+                        
        $admindata = Auth::user();
+    
                  
-     return view("Admin.order_management.order_details",compact('orderdetail','admindata'));
+     return view("Admin.order_management.order_details",compact('orderdetail','admindata','card_details'));
     }
 
     /**
@@ -109,9 +108,17 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $list = Order::find($request->id);
+        
+        $result = $list->delete();
+        
+        if ($result) {
+            return json_encode(array('status' => 'success','msg' => 'Order has been deleted successfully!'));
+        } else {
+            return json_encode(array('status' => 'error','msg' => 'Some internal issue occured.'));
+        }
     }
 
     // Get order list by ajax
@@ -275,117 +282,124 @@ class OrderController extends Controller
        
      $order_id = $request->order_id;
      $order_status =  $request->order_status;
-
-     $getvalue = DB::table('order')->where('order_id',$order_id)->first();
-
-	 $user_id = $getvalue->customer_id;
+     $user_name ='';
+	 $email_content = '';
      $cancel_reason = '' ;
      $date = date('Y-m-d H:i:s');
-     if($order_status==1){
-
-        // $carddata = DB::table('users_card')->where('order_id',$order_id)->where('user_id',$getvalue->user_id)->where('transaction_type','05')->first();
-       //  if(!empty($carddata)){
-        // $data = array(
-        //   'gateway_id'=> 'G15552-42',
-        //   'password'=> "V2wX5h1ov8iar0FR7ScRaePz2xZemfnF",
-        //   'transaction_type'=> '00',
-        //   'amount'=> $carddata->amount,
-        //   'cardholder_name'=> $carddata->cardholder_name,
-        //   'cc_number'=> $carddata->cc_number,
-        //   'cc_expiry'=> $carddata->cc_expiry,
-        //   'cvd_code'=> $carddata->cvd_code,
-        //   'cvd_presence_ind'=> '1',
-        //   'reference_no'=> $carddata->reference_no,
-        //   'customer_ref'=> $order_id,
-        //   'currency_code'=> 'USD',
-        //   'credit_card_type'=> $carddata->credit_card_type,
-
-        // );
-
-        // $payload = json_encode($data, JSON_FORCE_OBJECT);
-
-        // $curl = curl_init();
-
-        // curl_setopt_array($curl, array(
-        // CURLOPT_URL => "https://api.globalgatewaye4.firstdata.com/transaction",
-        // CURLOPT_RETURNTRANSFER => true,
-        // CURLOPT_ENCODING => "",
-        // CURLOPT_MAXREDIRS => 10,
-        // CURLOPT_TIMEOUT => 0,
-        // CURLOPT_FOLLOWLOCATION => true,
-        // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        // CURLOPT_CUSTOMREQUEST => "POST",
-        // CURLOPT_POSTFIELDS =>$payload,
-        // CURLOPT_HTTPHEADER => array(
-        //     "Content-Type: application/json"
-        // ),
-        // ));
-
-
-        // $json_response = curl_exec($curl);	
-
-        // $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-        // $response = json_decode($json_response, true);
-
-        // curl_close($curl);
-
-        // $cc_number = substr($carddata->cc_number,-4,4);
-
-        // if($response['transaction_approved']=='1'){
-
-        // DB::table('users_card')->where('order_id',$order_id)->where('user_id',$getvalue->user_id)->update([
-
-        //     'cc_number' => $cc_number,
-        //     'cvd_code' => '000',
-        //     'transaction_type' => $response['transaction_type'],
-        //     'transaction_tag' =>  strval($response['transaction_tag']),
-        //     'authorization_num' => $response['authorization_num'],
-        //     'transaction_approved' => $response['transaction_approved'],
-        //     'bank_message' => $response['bank_message'],
-        //     'updated_at' => date('Y-m-d H:i:s')
-
-        //     ]);
-
-        // Session::flash('message', 'Payment has been successfully processed');
-
-        // }else{
-
-        // Session::flash('errormsg', $json_response); 	
-
-        // return redirect()->to('/merchant/order-details/'.$id); // return redirect()->to('/merchant/order-list/'); 
-
-        // }
-
-        // }
-
-
-     }
 
      if($request->cancel_reason)
      {
         $cancel_reason = $request->cancel_reason;
      }
 
-     if($order_status==4){        
+     $getvalue = DB::table('order')->where('order_id',$order_id)->orderby('id',"DESC")->get();
+
+     $card_data = DB::table("order_details")
+                        ->select("order_details.*","cards.card_title","card_sizes.card_price As price","card_sizes.card_type","card_sizes.card_size")
+                        ->leftJoin("order","order.order_id","=","order_details.order_id")
+                        ->leftJoin("cards","cards.id","=","order_details.card_id")  
+                        ->leftJoin("card_sizes","card_sizes.id","=","order_details.card_size_id")
+                        ->where('order.order_id',$order_id)                    
+                        ->get();
+
+	 $user_id = $getvalue[0]->customer_id;
+
+     $user_name = $getvalue[0]->fname.' '.$getvalue[0]->lname;
+
+     $user_email = $getvalue[0]->email;
+     
+
+     $user_contact = $getvalue[0]->phone_no;
+   
+    
+     $data = array(
+
+        'user_name'=>$user_name,
+
+        'user_email'=>$user_email,
+
+        'user_contact'=>$user_contact,
+
+        "order_dtl" => $getvalue ,
+        "card_data" => $card_data
+  
+    );
+
+     if($order_status == 1){
+
+        Order::where('order_id',$order_id)->update(
+            ['order_status' => $request->order_status,
+              'cancel_reason' => $cancel_reason,
+              'updated_at'=> $date,
+        ]);
+
+        $data['email_subject'] = 'Order Confirm';
+
+        $data['email_content'] = 'Thank you for placing your order through Birthdaystore! Your order is now confirmed . Your Order No is :';
+
+        $this->Send_status_email($data);
+
+     }elseif($order_status==4){        
         Order::where('order_id',$order_id)->update(
             ['order_status' => $request->order_status,
               'cancel_reason' => $cancel_reason,
               'pay_status'=> 'Successful',
               'updated_at'=> $date,
         ]);
-        }else{
+         
+        $data['email_subject'] = 'Order Deliver';
+
+        $data['email_content'] = 'Your order is Delivered.';
+
+        $this->Send_status_email($data);
+
+        }elseif($order_status==3){
             Order::where('order_id',$order_id)->update(
                 ['order_status' => $request->order_status,
                   'cancel_reason' => $cancel_reason,
                   'updated_at'=> $date,
             ]);
+        
+            $data['email_subject'] = 'Order On the way';
 
+            $data['email_content'] = 'Your order is On the way.';
+    
+            $this->Send_status_email($data);
+
+        }elseif($order_status==2){
+            Order::where('order_id',$order_id)->update(
+                ['order_status' => $request->order_status,
+                  'cancel_reason' => $cancel_reason,
+                  'updated_at'=> $date,
+            ]);
+        
+            $data['email_subject'] = 'Order Cancel';
+
+            $data['email_content'] = 'Your Order is cancelled.';
+    
+            $this->Send_status_email($data);
         }
      
      return back()->with("success", "Status Changed Successfully");
 
     }
 
+
+    Public function Send_status_email($data){
+        
+        if(!empty($data['user_email']))
+        {
+             Mail::send('Admin.email_template.orderstatus_newemail', $data, function ($message) use ($data) {
+
+                $message->from('votivephp.neha@gmail.com','birthdaystore');
+
+                $message->to($data['user_email']);
+
+                $message->subject($data['email_subject']);
+
+            });
+
+        }
+    }
 
 }

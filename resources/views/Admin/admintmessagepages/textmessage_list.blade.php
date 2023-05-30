@@ -6,9 +6,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{{asset('public/images/favicon.ico')}}" type="image/ico" />
+    <link rel="icon" href="{{asset('public/images/newicon.ico')}}" type="image/ico" />
 
     <title>Text Message List | BirthdayCards</title>
+
+    
 
     @include('Admin.layout.datatable_css')   
   </head>
@@ -52,6 +54,11 @@
              <div class="alert alert-success alert-block">
               <button type="button" class="close" data-dismiss="alert">×</button>
                   <strong>{{ Session::get('success')}}</strong>
+                  @php
+                  header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+                  header("Cache-Control: post-check=0, pre-check=0", false);
+                  header("Pragma: no-cache");
+                  @endphp
             </div>        
             @endif
               <div class="col-md-12 col-sm-12 col-xs-12">
@@ -91,9 +98,10 @@
                               @if (!$messlist->isEmpty())
                               <?php $i = 1; ?>
                               @foreach ($messlist as $arr)
+                              <input type="hidden" value="{{ $arr->id }}" id="table_id">
                               <tr id="row{{ $arr->id }}">
                                   <td>{{$i}}</td>
-                                  <td>{{$arr->text_message}}</td>
+                                  <td class="text-mess{{$arr->id}}">{{$arr->text_message}}</td>
                                   <td class="mess_status">
                                     @if($arr->status == "Active")
                                       <div class="changediv{{$arr->id}} status-change"><button
@@ -202,10 +210,10 @@
    
   $(document).ready(function() {
     $('#example').DataTable({
-        'columnDefs': [ {
-               'targets': [], // column index (start from 0)
-               'orderable': false, // set orderable false for selected columns
-         }]
+      columnDefs: [ {
+      targets: 1,
+      render: DataTable.render.ellipsis( 70, true )
+    } ]
     });
   });
 
@@ -281,7 +289,15 @@ function MessStatusChange(id) {
     });
 
 }
-   </script>
+
+
+// var id =  $("#table_id").val();
+// let stringVal =  $(".text-mess" + id).html();
+
+// console.log(stringVal);
+// var shortenString = stringVal.substring(0, 90).concat('...');
+// $(".text-mess"+ id).html(shortenString);
+</script>
 
   </body>
 </html>

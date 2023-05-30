@@ -15,7 +15,8 @@
 	<div class="row">
 		<?php
 			
-			$user = Auth::user();
+			$user = Auth::guard("customer")->user();
+			//print_r($user);die;
 			
 		?>
 		@if ($message = Session::get('success'))
@@ -38,7 +39,7 @@
 			</div>
 				@if($user)
 				<?php
-				    $user_id = Auth::user()->id;
+				    $user_id = $user->id;
 					$favourites_data = DB::table('favourite_cards')->where(['user_id' => $user_id])->where(['card_id' => $card->id])->first();
 
 				?>
@@ -46,7 +47,7 @@
 					<form method="post" action="{{ url('/birthday-favourites') }}">
 						@csrf
 						<input type="hidden" name="favorite_id" value="1">
-						<input type="hidden" name="user_id" value="{{ $user->id }}">
+						<input type="hidden" name="user_id" value="{{ $user_id }}">
 						<input type="hidden" name="card_id" value="{{ $card->id }}">
 						<button class="favourite" type="submit">
 							<span class="fav fav-{{ $card->id }}" onclick="addFav('{{ $user->id }}','{{ $card->id }}')"><i class="fa fa-heart"></i></span>
@@ -137,7 +138,7 @@
 	          			@endforeach
 	          			<div class="qty_box">
       						<label for="quantity">Quantity</label>
-      						<input type="number" class="form-control" name="qty_box" id="qty_box" required="">
+      						<input type="number" class="form-control" name="qty_box" id="qty_box" required="" min="1">
       					</div>
 	          			<input class="submit_btn" type="submit" name="btn" value="Submit">
           			</form>

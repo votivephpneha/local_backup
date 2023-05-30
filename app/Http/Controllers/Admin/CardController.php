@@ -212,7 +212,7 @@ class CardController extends Controller
 
                     $image->move(public_path("upload/gallery_images"), $name);
 
-					$updategalValue = Card_gallery_image::create([
+					Card_gallery_image::create([
 
 						'gall_images' => $name,
 
@@ -222,7 +222,7 @@ class CardController extends Controller
 				}
             }
             
-            if($cardupdatevalue && $updategalValue){
+            if($cardupdatevalue ){
                 return redirect("admin/cardlist")->with(
                     "success",
                     "Card has been updated successfully."

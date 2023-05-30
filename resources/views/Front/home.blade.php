@@ -451,7 +451,7 @@ cover returns shipment!</p>
           <div class="col-md-3">
           <div class="how-it-work">
             <div class="plane">
-           <img src="{{ url('public/assets/img/secure-payment.svg') }}">
+           <img src="{{ url('public/assets/img/support-agent.svg') }}">
             </div>
             <div class="servi-text">
             <h5>Top-notch Syupport</h5>
@@ -463,7 +463,7 @@ We are here for you!</p>
           <div class="col-md-3">
           <div class="how-it-work">
             <div class="plane">
-           <img src="{{ url('public/assets/img/support-agent.svg') }}">
+           <img src="{{ url('public/assets/img/secure-payment.svg') }}">
             </div>
             <div class="servi-text">
             <h5>Secure Payments </h5>

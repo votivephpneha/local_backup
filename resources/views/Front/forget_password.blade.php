@@ -8,9 +8,9 @@
 @endsection
 
 @section('content')
-<div class="container">
+<div class="container forg-pwd">
 	<div class="row background-login">
-		<div class="col-md-5 col-lg-6 m-auto">
+		<div class="col-md-12 col-lg-12 m-auto">
   <div class="user_registration section-title-signup">
       <h2>Forget Password</h2>
       @if ($message = Session::get('error'))

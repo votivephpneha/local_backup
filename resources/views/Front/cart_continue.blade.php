@@ -8,7 +8,8 @@
 @endsection
 
 @section('content')
-<div class="container">
+<div class="container continue_item">
+  <div class="cont_inner">
 	@if ($message = Session::get('success'))
     <div class="alert alert-success">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -16,9 +17,15 @@
     </div>
      @endif
 	<div class="cart_countinue_page">
+	<div class="success-box">
+         <img src="https://votiveinfo.in/Birthdaycards/public/assets/img/tick.png">
 		<p>Do you want to design another card?</p>
-		<a href="{{ url('birthday-cards') }}" class="btn btn-success">Yes</a>
-		<a href="{{ url('cart') }}" class="btn btn-danger">No</a>
+		<div class="abtns_y_n">
+		<a href="{{ url('birthday-cards') }}" class="cont-yes btn btn-success">Yes</a><br>
+		<a href="{{ url('cart') }}" class="cont-no btn btn-danger">No</a>
+		</div>
 	</div>
+	</div>
+  </div>	
 </div>
 @endsection

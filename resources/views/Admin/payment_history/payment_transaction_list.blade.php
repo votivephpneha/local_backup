@@ -12,7 +12,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{{asset('public/images/favicon.ico')}}" type="image/ico" />
+    <link rel="icon" href="{{asset('public/images/newicon.ico')}}" type="image/ico" />
     <title>Payment History | BirthdayCards</title>
     <div class="main_container">
         @include('Admin.layout.datatable_css')
@@ -79,6 +79,12 @@
 
                             <strong>{{ Session::get('success')}}</strong>
 
+                            @php
+                            header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+                            header("Cache-Control: post-check=0, pre-check=0", false);
+                            header("Pragma: no-cache");
+                            @endphp
+
                         </div>
 
                         @endif
@@ -114,7 +120,7 @@
                                             <tr>
                                                 <!-- <th>id#</th> -->
                                                 <th>S.no#</th>
-                                                <th>Transaction Id</th>
+                                                <!-- <th>Transaction Id</th> -->
                                                 <th>Order Id</th>
                                                 <th>Customer</th>
                                                 <th>Amount</th>
@@ -129,15 +135,16 @@
                                         @foreach ($payhisList as $arr)
                                          <tr id="row{{ $arr->id }}">
                                             <td>{{ $i }}</td>
-                                            <td>{{$arr->transaction_id}}</td>
-                                            <td>{{$arr->order_id1}}</td>
-                                            <td>{{$arr->firstname ." ". $arr->lastname}}</td>
-                                            <td>${{number_format($arr->total_amount, 2)}}</td>
-                                            <td>{{$arr->payment_status}}</td>
+                                            <!-- <td>{{$arr->transaction_id}}</td> -->
+                                            <td>{{$arr->order_id}}</td>
+                                            <td>{{$arr->fname ." ". $arr->lname}}</td>
+                                            <td>${{number_format($arr->total, 2)}}</td>
+                                            <td>{{$arr->pay_status}}</td>
                                             <td>{{date('Y-m-d', strtotime($arr->created_at))}}</td>
                                             <td><button class="btn btn-dark p-2">
                                             <a href="{{route('view.payment.detail',[$arr->id])}}" class="text-white" style=" color: #FFFFFF;"><i class="fa fa-eye" ></i>View</button></a></td>
                                          </tr>
+                                         <?php $i++; ?>
                                         @endforeach 
                                         @endif
                                         </tbody>

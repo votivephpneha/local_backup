@@ -17,27 +17,23 @@
 	<td>
 		<span class="delete_icon" onclick="deleteCartItem('{{ $cart_data[0]->cart_id }}')">
 			<i class="fa fa-trash"></i>
-		</span>
-		<img src="{{ url('public/upload/cards') }}/{{ $card_data[0]->card_image }}" style="width:100px;"></td>
-	<td>{{ $card_data[0]->card_title }}</td>
-	<td class="qty_td-{{ $cart_data[0]->cart_id }}">
+		</span></td>
+		<td class="product-thumbnail"><img src="{{ url('public/upload/cards') }}/{{ $card_data[0]->card_image }}" style="width:100px;"></td>
+	<td class="product-title">{{ $card_data[0]->card_title }}</td>
+	<td class="qty_td-{{ $cart_data[0]->cart_id }} qty-box">
 		
-		<button class="min-{{ $cart_data[0]->cart_id }} button" onclick="qtyInc('minus','{{ $cart_data[0]->cart_id }}','{{ $card_price }}','{{ $size_quantity }}')" @if($cart_data[0]->qty < 2) disabled @endif>
+		<button class="min-{{$cart_data[0]->cart_id }} button min-qty" onclick="qtyInc('minus','{{ $cart_data[0]->cart_id }}','{{ $card_price }}','{{ $size_quantity }}')" @if($cart_data[0]->qty < 2) disabled @endif>
 		-
 		</button>
 
-		<input type="text" name="qty-{{ $cart_data[0]->cart_id }}" id="qty-{{ $cart_data[0]->cart_id }}" value="{{ $cart_data[0]->qty }}" readonly />
-		<button class="plus-{{ $cart_data[0]->cart_id }} button" onclick="qtyInc('plus','{{ $cart_data[0]->cart_id }}','{{ $card_price }}','{{ $size_quantity }}')">
+		<input class="qty-cen" type="text" name="qty-{{ $cart_data[0]->cart_id }}" id="qty-{{ $cart_data[0]->cart_id }}" value="{{ $cart_data[0]->qty }}" readonly />
+		<button class="plus-{{ $cart_data[0]->cart_id }} button plus-qty" onclick="qtyInc('plus','{{ $cart_data[0]->cart_id }}','{{ $card_price }}','{{ $size_quantity }}')" @if($remaining_qty < 1) disabled @endif>
 		+
 		</button>
-
-		<?php
-			if($remaining_quantity < 1){
-				echo "<p>Card quantity is not available</p>";		
-			}
-		?>
+		<p class="qty_not_available" style="display:none">Card quantity is not available</p>
+		
 	</td>
-	<td class="card_type">
+	<td>
 		{{ $card_sizes[0]->card_type }}
 	</td>
 	<td>

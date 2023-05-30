@@ -13,6 +13,8 @@
 
 <script src="{{ asset('public/notifications/notification.js') }}"></script>
 
+<script src="https://cdn.datatables.net/plug-ins/1.13.4/dataRender/ellipsis.js"></script>
+
 <script>
 setTimeout(function() {
 $('.alert-success').fadeOut('slow');

@@ -10,7 +10,7 @@
   <meta content="" name="keywords">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="{{ url('public/assets/img/faviconc.png') }}" rel="icon">
+  <link rel="icon" href="{{asset('public/images/newicon.ico')}}" type="image/ico" />
   
   <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Source+Sans+Pro:wght@200;300;400;600;700&display=swap" rel="stylesheet">
 
@@ -293,6 +293,19 @@ $(".close").click(function(){
     
   });
 
+  $(document).ready(function(){
+    $("#readymade_carousel").owlCarousel({
+	    margin: 20,
+      items:3,
+      loop: true,
+      nav:true,
+      dots:true
+    });
+  }); 
+
+  
+
+ 
 </script>
   @yield('current_page_js')
 </body>

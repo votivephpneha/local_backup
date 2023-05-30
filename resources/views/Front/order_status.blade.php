@@ -10,13 +10,18 @@
 @section('content')
 <style type="text/css">
 	.order_status_page{
-		margin-top: 141px;
+		margin-top: 115px;
 	}
 </style>
-<div class="container order_status_page">
+<div class="order_status_page">
+<div class="container inner-odr-status">
 	<div class="order_status_header">
+		<div class="check-icn"><i class='bx bx-check-circle'></i></div>
+		<div class="check-info">
 		<h2>Thank You!</h2>
-		<p>Your order has been submitted.</p>
+		<p>Your order has been received.</p>
+		<p>We have accepted your order, and we're getting it ready. A confirmation mail has been sent to you.</p>
+		</div>
 	</div>
 	<div class="order_details">
 		<div class="order_summry">
@@ -24,17 +29,21 @@
 		<?php
 			$order = DB::table('order')->where('order_id',$order_id)->get();
 		?>
-		<p><b>Order ID</b>:{{ $order[0]->order_id }}</p>
-		<p><b>To</b>:{{ $order[0]->fname }} {{ $order[0]->lname }}</p>
+		<p>Order ID: <b>{{ $order[0]->order_id }}</b></p>
+		<p>To: <b>{{ $order[0]->fname }} {{ $order[0]->lname }}</b></p>
 		<p>
-			<b>Address</b>:{{ $order[0]->address }}
+			Address: <b>{{ $order[0]->address }}</b>
 		</p>
 		<p>
-			<b>Phone No</b>:{{ $order[0]->phone_no }}
+			Phone No:<b> {{ $order[0]->phone_no }}</b>
+		</p>
+		<p>
+			PAYMENT METHOD: <b>Cash On Delivery</b>
 		</p>
 	</div>
+	<div class="order_table_info">
 	<h2>Order Details</h2>
-	<table style="width:100%;text-align: center">
+	<table class="data_details" style="width:100%;">
 		<thead>
 			<tr>
 				<th>#</th>
@@ -60,7 +69,7 @@
 			    ?>
 				<tr>
 					<td>{{ $i }}</td>
-					<td>{{ $card_detail[0]->card_title }}</td>
+					<td style="color: #ff0091;font-weight: 600;">{{ $card_detail[0]->card_title }}</td>
 					<td>{{ $card_size_detail[0]->card_type }}<br>{{ $card_size_detail[0]->card_size }}</td>	
 						
 					<td>{{ $o_det->qty }}</td>	
@@ -95,14 +104,14 @@
 					</b>
 				</td>
 			</tr>
-			<tr>
+			<tr class="tot_amt">
 				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><b>Sub Total</b></td>
+				<td><b style="color: #ff0091;">Sub Total</b></td>
 				<td>
-					<b>
+					<b style="color: #ff0091;">
 					<?php
 						$order_sub_total = $order[0]->sub_total;	
 						echo "$".number_format((float)$order_sub_total, 2, '.', '');
@@ -113,8 +122,9 @@
 		</tbody>
 		
 	</table>
+	</div>
 </div>
 	</div>
 </div>
-
+</div>
 @endsection

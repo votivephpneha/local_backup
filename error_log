@@ -161,3 +161,9 @@ Stack trace:
 #0 {main}
   thrown in /home3/votivjhg/public_html/Birthdaycards/index.php on line 34
 [03-May-2023 06:01:46 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\Front\CustomerController::user_ChangePassword() in /home3/votivjhg/public_html/Birthdaycards/app/Http/Controllers/Front/CustomerController.php on line 107
+[23-May-2023 12:48:19 UTC] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 266342400 bytes) in /home3/votivjhg/public_html/Birthdaycards/app/Http/Controllers/Front/CustomerController.php on line 165
+[23-May-2023 12:48:29 UTC] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 266342400 bytes) in /home3/votivjhg/public_html/Birthdaycards/app/Http/Controllers/Front/CustomerController.php on line 165
+[23-May-2023 12:50:09 UTC] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 266342400 bytes) in /home3/votivjhg/public_html/Birthdaycards/app/Http/Controllers/Front/CustomerController.php on line 165
+[23-May-2023 12:50:27 UTC] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 266342400 bytes) in /home3/votivjhg/public_html/Birthdaycards/app/Http/Controllers/Front/CustomerController.php on line 165
+[23-May-2023 12:51:14 UTC] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 266342400 bytes) in /home3/votivjhg/public_html/Birthdaycards/app/Http/Controllers/Front/CustomerController.php on line 165
+[23-May-2023 12:51:32 UTC] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 266342400 bytes) in /home3/votivjhg/public_html/Birthdaycards/app/Http/Controllers/Front/CustomerController.php on line 165

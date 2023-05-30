@@ -26,7 +26,7 @@ use Mail;
 
 class AuthController extends Controller
 {
-    protected $guard = 'admin';   
+    // protected $guard = 'admin';   
     public function index(){
      return view('Admin/adminauthpages/login');
     }
@@ -40,12 +40,11 @@ class AuthController extends Controller
 
         $userdata = $request->only("email", "password");
         //if (Auth::attempt($userdata)) {
-        if (Auth::guard("admin")->attempt($userdata)) {
-            $user = Auth::guard("admin")->user();
-            
+        if (Auth::guard("adm")->attempt($userdata)) {
+            $user = Auth::guard("adm")->user();
            if($user->role == 'admin'){
-            // Session::put("name", $user->fname);
-            // Session::put("proimg", $user->image);
+            Session::put("name", $user->fname);
+            Session::put("proimg", $user->image);
             return redirect("admin/dashboard");
            }
         }
@@ -55,8 +54,11 @@ class AuthController extends Controller
     // admin logout
     public function logout()
     {
-        Session::flush();
-        Auth::guard("adms")->logout();
+        //Session::flush();
+        $authid =  Auth::guard("adm")->user();
+        session()->forget(['name', $authid->name]); //remove session [1,2,3] and store the new one
+        session()->forget(['proimg', $authid->image]); //remove session [1,2,3] and store the new one
+        Auth::guard("adm")->logout();
         return Redirect("/admin");
     }
 

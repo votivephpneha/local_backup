@@ -16,8 +16,8 @@
           {{ $message }}
         </div>
          @endif
-		<div class="video_qr">
-			<video width="100%" height="auto" controls>
+		<div class="video_qr" id="overlay">
+			<video width="100%" height="auto" controls >
 			  <source src="{{ url('public/upload/videos') }}/{{ $db_card_data->video_name }}" type="video/mp4">
 			  
 			  Your browser does not support the video tag.
@@ -56,11 +56,18 @@
 		</div>
 		<div class="footer-ctn">
 			<div class="countinue_btn">
-				<a href="#">Continue</a>
+				<a href="#">Continue to Card Editor</a>
 			</div>
 		</div>
 	</div>
 </div>	
+
+<script type="text/javascript">
+$(window).load(function(){ 
+ //PAGE IS FULLY LOADED 
+ //FADE OUT YOUR OVERLAYING DIV
+ $('#overlay').fadeOut();
+});</script>
 <script src =  
     "https://code.jquery.com/jquery-3.5.1.js">  
 </script>

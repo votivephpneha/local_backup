@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\FavouriteCardsController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\VoucherCodeController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Front\OrdertrackingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,7 +71,15 @@ Route::get('/forget_password', [CustomerController::class, 'forget_password'])->
 Route::post('/postforget_password', [CustomerController::class, 'postforget_password'])->name('postforget_password');
 Route::get('/reset_password/{token}', [CustomerController::class, 'reset_password'])->name('reset_password');
 Route::post('/postreset_password', [CustomerController::class, 'postreset_password'])->name('postreset_password');
-Route::group(['prefix' => 'user', 'middleware' => 'customer_auth'], function () {
+Route::get('/get_cards/', [FrontCardController::class, 'get_cards'])->name('get_cards');
+Route::get('/searchModel/', [FrontCardController::class, 'searchModel'])->name('searchModel');
+Route::post('/search_submit/', [FrontCardController::class, 'search_submit'])->name('search_submit');
+Route::get('/search_page/{text}', [FrontCardController::class, 'search_page'])->name('search_page');
+Route::get('/contact-us/', [FrontCardController::class, 'contact_us'])->name('contact-us');
+Route::post('/submitContact/', [FrontCardController::class, 'submitContact'])->name('submitContact');
+Route::get('/order-track/', [OrdertrackingController::class, 'index'])->name('order-track');
+Route::post('/trackorder_submit/', [OrdertrackingController::class, 'trackorder_submit'])->name('trackorder_submit');
+Route::group(['prefix' => 'user', 'middleware' => 'customer_auth:customer'], function () {
 	Route::get('/userProfile', [CustomerController::class, 'userProfile'])->name('userProfile');
 	Route::post('/postuserProfile', [CustomerController::class, 'postuserProfile'])->name('postuserProfile');
 	Route::get('/user_ChangePassword', [CustomerController::class, 'user_ChangePassword'])->name('user_ChangePassword');
@@ -82,13 +91,16 @@ Route::group(['prefix' => 'user', 'middleware' => 'customer_auth'], function () 
 	Route::get('/front_logout', [CustomerController::class, 'front_logout'])->name('front_logout');
 });
 
-Route::group(['prefix' => '', 'middleware' => 'customer_auth'], function () {
+Route::group(['prefix' => '', 'middleware' => 'customer_auth:customer'], function () {
 	Route::get('/cart', [FrontCardController::class, 'cart_page'])->name('cart_page');
 	Route::get('/delete_cart_item', [FrontCardController::class, 'delete_cart_item'])->name('delete_cart_item');
 	Route::post('/post_cart', [FrontCardController::class, 'post_cart'])->name('post_cart');
 	Route::get('/cart_table', [FrontCardController::class, 'cart_table_show_data'])->name('cart_table');
 	Route::get('/cart_data', [FrontCardController::class, 'cart_data'])->name('cart_data');
+	Route::get('/checkout_data', [FrontCardController::class, 'checkout_data'])->name('checkout_data');
 	Route::get('/checkout/', [FrontCardController::class, 'checkout'])->name('checkout');
+	Route::get('/get_state/', [FrontCardController::class, 'get_state'])->name('get_state');
+	Route::get('/get_city/', [FrontCardController::class, 'get_city'])->name('get_city');
 	Route::post('/post_checkout', [FrontCardController::class, 'post_checkout'])->name('post_checkout');
 	Route::get('/order_status/{order_id}', [FrontCardController::class, 'order_status'])->name('order_status');
 });	
@@ -97,7 +109,7 @@ Route::group(['prefix' => '', 'middleware' => 'customer_auth'], function () {
 Route::get('/admin', [AuthController::class, 'index'])->name('login');
 Route::post('/login', [AuthController::class, 'adminLogin'])->name('login.post');
 // apply midddleware
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:adm'], function () {
 
 	Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 	Route::get('/logout', [AuthController::class, 'logout'])->name('logout');

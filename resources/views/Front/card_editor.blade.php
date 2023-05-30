@@ -47,12 +47,21 @@
 				<input type="hidden" name="cart_id" value="{{ $cart_id }}" class="cart1_id">
 				<input type="hidden" name="text_size_font1" value="" class="text_size_font1">
 				<input type="hidden" name="text_color_font1" value="" class="text_color_font1">
+				<input type="hidden" name="text_align_hor_font1" value="" class="text_align_hor_font1">
+				<input type="hidden" name="text_align_ver_font1" value="" class="text_align_ver_font1">
+				<input type="hidden" name="text_font_font1" value="" class="text_font_font1">
 				<input type="hidden" name="text_font1" value="" class="text_font1">
 				<input type="hidden" name="text_size_font2" value="" class="text_size_font2">
 				<input type="hidden" name="text_color_font2" value="" class="text_color_font2">
+				<input type="hidden" name="text_align_hor_font2" value="" class="text_align_hor_font2">
+				<input type="hidden" name="text_align_ver_font2" value="" class="text_align_ver_font2">
+				<input type="hidden" name="text_font_font2" value="" class="text_font_font2">
 				<input type="hidden" name="text_font2" value="" class="text_font2">
 				<input type="hidden" name="text_size_font3" value="" class="text_size_font3">
 				<input type="hidden" name="text_color_font3" value="" class="text_color_font3">
+				<input type="hidden" name="text_align_hor_font3" value="" class="text_align_hor_font3">
+				<input type="hidden" name="text_align_ver_font3" value="" class="text_align_ver_font3">
+				<input type="hidden" name="text_font_font3" value="" class="text_font_font3">
 				<input type="hidden" name="text_font3" value="" class="text_font3">
 				<button type="submit" class="editor-add-basket">Add to Basket</button>
 			</form>
@@ -133,22 +142,22 @@
 			  					<h6>Horizontal</h6>
 								<div class="algn_horizontal">
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment" value="left" onclick="changeTextSize('1','text-align',this.value)">
+			  					<input type="radio" name="alignment" class="alignment" value="left" onclick="changeTextSize('1','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4ZM3 9a1 1 0 0 1 1-1h11.539a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h11.539a1 1 0 0 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment" value="center" onclick="changeTextSize('1','text-align',this.value)">
+			  					<input type="radio" name="alignment-hor" class="alignment" value="center" onclick="changeTextSize('1','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1ZM7 9a1 1 0 0 1 1-1h11.538a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h11.538a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment" value="right" onclick="changeTextSize('1','text-align',this.value)">
+			  					<input type="radio" name="alignment-hor" class="alignment" value="right" onclick="changeTextSize('1','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Zm7-14a1 1 0 0 1 1-1h11.538a1 1 0 0 1 0 2H12a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h11.538a1 1 0 0 0 0-2H12Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment" value="justify" onclick="changeTextSize('1','text-align',this.value)">
+			  					<input type="radio" name="alignment-hor" class="alignment" value="justify" onclick="changeTextSize('1','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4ZM3 9a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
@@ -158,17 +167,17 @@
 			  					<h6>Vertical</h6>
 								<div class="align-vertical">
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment" value="vertically-top" onclick="changeTextSize('1','text-align',this.value)">
+			  					<input type="radio" name="alignment-ver" class="alignment" value="vertically-top" onclick="changeTextSize('1','text-align-vertical',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M4 3a1 1 0 0 0 0 2h20a1 1 0 1 0 0-2H4Zm0 5a1 1 0 0 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment" value="vertically-middle" onclick="changeTextSize('1','text-align',this.value)">
+			  					<input type="radio" name="alignment-ver" class="alignment" value="vertically-middle" onclick="changeTextSize('1','text-align-vertical',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M4 10.5a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Zm0 5a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment" value="vertically-bottom" onclick="changeTextSize('1','text-align',this.value)">
+			  					<input type="radio" name="alignment-ver" class="alignment" value="vertically-bottom" onclick="changeTextSize('1','text-align-vertical',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M4 18a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Zm0 5a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
@@ -293,22 +302,22 @@
 			  					<h6>Horizontal</h6>
 								<div class="algn_horizontal">
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment" value="left" onclick="changeTextSize('2','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4ZM3 9a1 1 0 0 1 1-1h11.539a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h11.539a1 1 0 0 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment" value="center" onclick="changeTextSize('2','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1ZM7 9a1 1 0 0 1 1-1h11.538a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h11.538a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment" value="right" onclick="changeTextSize('2','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Zm7-14a1 1 0 0 1 1-1h11.538a1 1 0 0 1 0 2H12a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h11.538a1 1 0 0 0 0-2H12Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment" value="justify" onclick="changeTextSize('2','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4ZM3 9a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
@@ -318,17 +327,17 @@
 			  					<h6>Vertical</h6>
 								<div class="align-vertical">
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment" value="vertically-top" onclick="changeTextSize('1','text-align',this.value)">
+			  					<input type="radio" name="alignment" class="alignment" value="vertically-top" onclick="changeTextSize('2','text-align-vertical',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M4 3a1 1 0 0 0 0 2h20a1 1 0 1 0 0-2H4Zm0 5a1 1 0 0 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment" value="vertically-middle" onclick="changeTextSize('1','text-align',this.value)">
+			  					<input type="radio" name="alignment" class="alignment" value="vertically-middle" onclick="changeTextSize('2','text-align-vertical',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M4 10.5a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Zm0 5a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment" value="vertically-bottom" onclick="changeTextSize('1','text-align',this.value)">
+			  					<input type="radio" name="alignment" class="alignment" value="vertically-bottom" onclick="changeTextSize('2','text-align-vertical',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M4 18a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Zm0 5a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
@@ -455,22 +464,22 @@
 			  					<h6>Horizontal</h6>
 								<div class="algn_horizontal">
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment-hor" value="left" onclick="changeTextSize('3','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4ZM3 9a1 1 0 0 1 1-1h11.539a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h11.539a1 1 0 0 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment-hor" value="center" onclick="changeTextSize('3','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1ZM7 9a1 1 0 0 1 1-1h11.538a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h11.538a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment-hor" value="right" onclick="changeTextSize('3','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Zm7-14a1 1 0 0 1 1-1h11.538a1 1 0 0 1 0 2H12a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h11.538a1 1 0 0 0 0-2H12Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment-hor" value="justify" onclick="changeTextSize('3','text-align-horizontal',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M3 4a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm0 10a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4ZM3 9a1 1 0 0 1 1-1h20a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Zm1 9a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
@@ -480,17 +489,17 @@
 			  					<h6>Vertical</h6>
 								<div class="align-vertical">
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment-ver" value="vertically-top" onclick="changeTextSize('3','text-align-vertical',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M4 3a1 1 0 0 0 0 2h20a1 1 0 1 0 0-2H4Zm0 5a1 1 0 0 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment-ver" value="vertically-middle" onclick="changeTextSize('3','text-align-vertical',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M4 10.5a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Zm0 5a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
 								<div class="col-md-2">
-			  					<input type="radio" name="alignment" class="alignment">
+			  					<input type="radio" name="alignment" class="alignment-ver" value="vertically-bottom" onclick="changeTextSize('3','text-align-vertical',this.value)">
 			  					<label for="">
 			  						<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28px" height="28px"><path d="M4 18a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Zm0 5a1 1 0 1 0 0 2h20a1 1 0 1 0 0-2H4Z" fill="currentColor"></path></svg>
 			  					</label></div>
@@ -555,11 +564,21 @@
 		  	</div>
 		  </div>
 		</div>
+		</div>
 		
-		
-	</div>
-
 </div>
+	@if(count($messages) > 0)	
+	<div class="editor_pretext">
+		<h4>You can also choose some predefined personalised message</h4> 
+	<div class="owl-carousel" id="readymade_carousel">
+	  @foreach($messages as $msg)	
+	  <div class="premade-texts"> {{ $msg->text_message }} </div>
+	  @endforeach
+	</div>
+	</div>
+	@endif
+
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript">
@@ -749,19 +768,22 @@
 
 	        if(text_type == 'text-font'){
 	        	$(".change_hide_div-1 textarea").css("font-family",i);
-	        	$(".text_color_font1").val(i);
+	        	$(".text_font_font1").val(i);
 	        	
 	        }
-	        
-	        if(text_type == 'text-align'){
-	        	$(".change_hide_div-1 textarea").css("text-align",i);
-	        	$(".text_color_font1").val(i);
 
+	        if(text_type == 'text-align-horizontal'){
+	        	$(".change_hide_div-1 textarea").css("text-align",i);
+	        	$(".text_align_hor_font1").val(i);
+	        }
+
+	        if(text_type == 'text-align-vertical'){
 	        	if(i == "vertically-top"){
 	        		$(".change_hide_div-1").css("display","table-cell");
 	        		$(".change_hide_div-1").css("width","400px");
 	        		$(".change_hide_div-1").css("height","500px");
 	        		$(".change_hide_div-1").css("vertical-align","top");
+	        		$(".text_align_ver_font1").val(i);
 	        	}
 
 	        	if(i == "vertically-middle"){
@@ -769,6 +791,7 @@
 	        		$(".change_hide_div-1").css("width","400px");
 	        		$(".change_hide_div-1").css("height","500px");
 	        		$(".change_hide_div-1").css("vertical-align","middle");
+	        		$(".text_align_ver_font1").val(i);
 	        	}
 
 	        	if(i == "vertically-bottom"){
@@ -776,8 +799,11 @@
 	        		$(".change_hide_div-1").css("width","400px");
 	        		$(".change_hide_div-1").css("height","500px");
 	        		$(".change_hide_div-1").css("vertical-align","bottom");
+	        		$(".text_align_ver_font1").val(i);
 	        	}
 	        }
+	        
+	        
     	}
 
     	if(text_id == 2){
@@ -794,9 +820,37 @@
 
 	        if(text_type == 'text-font'){
 	        	$(".change_hide_div-2 textarea").css("font-family",i);
-	        	$(".text_color_font2").val(i);
+	        	$(".text_font_font2").val(i);
 	        	
 	        }
+
+	        if(text_type == 'text-align-horizontal'){
+	        	$(".change_hide_div-2 textarea").css("text-align",i);
+	        	$(".text_align_hor_font2").val(i);
+	        }
+
+	        if(text_type == 'text-align-vertical'){
+	        	if(i == "vertically-top"){
+	        		$(".change_hide_div-2").css("position","relative");
+	        		$(".change_hide_div-2").css("top","-35px");
+	        		$(".text_align_ver_font2").val(i);
+	        		
+	        	}
+
+	        	if(i == "vertically-middle"){
+	        		$(".change_hide_div-2").css("position","relative");
+	        		$(".change_hide_div-2").css("top","-5px");
+	        		$(".text_align_ver_font2").val(i);
+	        	}
+
+	        	if(i == "vertically-bottom"){
+	        		$(".change_hide_div-2").css("position","relative");
+	        		$(".change_hide_div-2").css("top","35px");
+	        		$(".text_align_ver_font2").val(i);
+	        	}
+	        }
+
+	        
     	}
 
     	if(text_id == 3){
@@ -812,9 +866,37 @@
 
 	        if(text_type == 'text-font'){
 	        	$(".change_hide_div-3 textarea").css("font-family",i);
-	        	$(".text_color_font3").val(i);
+	        	$(".text_font_font3").val(i);
 	        	
 	        }
+
+	        if(text_type == 'text-align-horizontal'){
+	        	$(".change_hide_div-3 textarea").css("text-align",i);
+	        	$(".text_align_hor_font3").val(i);
+	        }
+
+	        if(text_type == 'text-align-vertical'){
+	        	if(i == "vertically-top"){
+	        		$(".change_hide_div-3").css("position","relative");
+	        		$(".change_hide_div-3").css("top","-35px");
+	        		
+	        		$(".text_align_ver_font3").val(i);
+	        	}
+
+	        	if(i == "vertically-middle"){
+	        		$(".change_hide_div-3").css("position","relative");
+	        		$(".change_hide_div-3").css("top","-5px");
+	        		$(".text_align_ver_font3").val(i);
+	        	}
+
+	        	if(i == "vertically-bottom"){
+	        		$(".change_hide_div-3").css("position","relative");
+	        		$(".change_hide_div-3").css("top","35px");
+	        		$(".text_align_ver_font3").val(i);
+	        	}
+	        }
+
+
     	}
 		
 	}
@@ -998,14 +1080,59 @@
         container_font_three.hide();
     }
 
-    // var container_text_one = $(".text-one-div .change_show_div-1");
+    var change_div_content_one = $(".change_hide_div-1");
 
-    // // If the target of the click isn't the container
-    // if(!container_text_one.is(e.target) && container_text_one.has(e.target).length === 0){
-    //     container_text_one.show();
-    //     $(".text-one-div .change_hide_div-1").hide;
-    // }
+    if(!change_div_content_one.is(e.target) && change_div_content_one.has(e.target).length === 0){
+    	var change_div_one = $(".change_hide_div-1 textarea").val().trim().length;
+    	
+    	if(change_div_one <= 0){
+    		//alert(change_div_content_one);
+    		change_div_content_one.hide();
+        	$(".change_show_div-1").show();
+        	$(".text-tools-one").hide();
+    	}
+        
+    }
+
+    var change_div_content_two = $(".change_hide_div-2");
+
+    if(!change_div_content_two.is(e.target) && change_div_content_two.has(e.target).length === 0){
+    	var change_div_two = $(".change_hide_div-2 textarea").val().trim().length;
+    	
+    	if(change_div_two <= 0){
+    		//alert(change_div_content_one);
+    		change_div_content_two.hide();
+        	$(".change_show_div-2").show();
+        	$(".text-tools-two").hide();
+    	}
+        
+    }
+
+    var change_div_content_three = $(".change_hide_div-3");
+
+    if(!change_div_content_three.is(e.target) && change_div_content_three.has(e.target).length === 0){
+    	var change_div_three = $(".change_hide_div-3 textarea").val().trim().length;
+    	
+    	if(change_div_three <= 0){
+    		//alert(change_div_content_one);
+    		change_div_content_three.hide();
+        	$(".change_show_div-3").show();
+        	$(".text-tools-three").hide();
+    	}
+        
+    }
+    
 });
+
+$(".exit_btn a").click(function(){
+	
+            window.history.back();
+       
+	
+});
+
+
+
 
 </script>
 @endsection

@@ -19,7 +19,8 @@
       <div class="user-profile-tab">
         <h2>My Orders</h2>
         <div class="order-details-div">
-          @if(count($order_data) > 0)
+
+          @if(count($order_data))
             <table style="width:100%" class="table table-bordered">
               <thead>
                 <tr>

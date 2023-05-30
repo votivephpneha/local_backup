@@ -9,15 +9,12 @@ use File;
 use Session;
 use Illuminate\Support\Str;
 use App\Models\User;
-use App\Models\Customer;
 use DB,Validator;
 use Hash;
 use Auth;
 use Mail;
 
 class CustomerController extends Controller{
-
-    
 
 	public function index(){
 		return view("Front/register");
@@ -47,21 +44,23 @@ class CustomerController extends Controller{
 	      'email'  => $request->get('email'),
 	      'password' => $request->get('password')
 	    );
-        $user = Customer::where('email', '=', $request->email)->first();
+        $user = User::where('email', '=', $request->email)->first();
         
-		if(Auth::attempt($user_data) && $user->status == 'Active')
+		if(Auth::guard("customer")->attempt($user_data) && $user->status == 'Active')
 		{
-            //echo Auth::guard('customer')->attempt($user_data);
-            // Session::put("name1", $user->fname);
-            // Session::put("proimg1", $user->image);
-            //echo $user_data['email'];die;
             
 			if($user_data['email']=="admin@gmail.com"){
 				session::flash('error', 'Email or Password is Incorrect.');
 				return redirect()->route('loginUser');
 			}else{
-                //echo "hello";
-				return redirect()->route('userProfile');
+                
+                if(Session::get('cart')=='cart'){
+                    Session::forget('cart');
+                    return redirect('/cart');
+                }else{
+                    return redirect()->route('userProfile');
+                }
+				
 			}
 			
 		}
@@ -73,7 +72,6 @@ class CustomerController extends Controller{
 	}
 
 	public function userProfile(){
-        
 		$user = array(
 			'fname'=>Auth::User()->fname,
 			'lname'=>Auth::User()->lname,
@@ -147,8 +145,21 @@ class CustomerController extends Controller{
         }
         $user_id = Auth::user()->id;
         $data['order_data'] = DB::table('order')->where(['customer_id' => $user_id])->get();
-        //print_r($data['order_data']);die;
+
+        //print_r($data['order_data']);
     	return view("Front/user_order")->with($data);
+    }
+
+    public function order_detail(Request $request)
+    {
+        $order_id = $request->order_id;
+        return view("Front/order_detail",['order_id'=>$order_id]);
+    }
+
+    public function favourites_delete(Request $request){
+        $favourite_card_id = $request->favourite_card_id;
+
+        DB::table('favourite_cards')->where(['favourite_card_id'=> $favourite_card_id])->delete();
     }
 
     public function user_favourites(){
@@ -157,7 +168,7 @@ class CustomerController extends Controller{
         }
         $user_id = Auth::user()->id;
         $data['favourites_data'] = DB::table('favourite_cards')->where(['user_id' => $user_id])->get();
-
+        
     	return view("Front/user_favourites")->with($data);
     }
 
@@ -228,20 +239,8 @@ class CustomerController extends Controller{
 	public function front_logout()
     {
         
-        Auth::logout();
-        return redirect("/loginUser");
+            Auth::guard("customer")->logout();
+            return Redirect("/loginUser");
         
-    }
-
-    public function order_detail(Request $request)
-    {
-        $order_id = $request->order_id;
-        return view("Front/order_detail",['order_id'=>$order_id]);
-    }
-
-    public function favourites_delete(Request $request){
-        $favourite_card_id = $request->favourite_card_id;
-
-        DB::table('favourite_cards')->where(['favourite_card_id'=> $favourite_card_id])->delete();
     }
 }

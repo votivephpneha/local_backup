@@ -20,7 +20,6 @@ class Customer extends Middleware
     {
         
         if (! $request->expectsJson()) {
-            
             return route('loginUser');
         }
     }

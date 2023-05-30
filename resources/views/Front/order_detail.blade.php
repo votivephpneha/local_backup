@@ -78,14 +78,14 @@
 									</b>
 								</td>
 							</tr>
-							<tr>
+							<tr class="tot_amt">
 								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><b>Sub Total</b></td>
+								<td><b style="color: #ff0091;">Sub Total</b></td>
 								<td>
-									<b>
+									<b style="color: #ff0091;">
 									<?php
 										$order_sub_total = $order[0]->sub_total;	
 										echo "$".number_format((float)$order_sub_total, 2, '.', '');

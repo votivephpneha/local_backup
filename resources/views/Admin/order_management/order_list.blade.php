@@ -12,7 +12,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{{asset('public/images/favicon.ico')}}" type="image/ico" />
+    <link rel="icon" href="{{asset('public/images/newicon.ico')}}" type="image/ico" />
     <title>Order List | BirthdayCards</title>
     <div class="main_container">
         @include('Admin.layout.datatable_css')
@@ -67,6 +67,11 @@
                             <button type="button" class="close" data-dismiss="alert">×</button>
 
                             <strong>{{ Session::get('success')}}</strong>
+                            @php
+                            header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+                            header("Cache-Control: post-check=0, pre-check=0", false);
+                            header("Pragma: no-cache");
+                            @endphp
 
                         </div>
 
@@ -127,11 +132,12 @@
                                                 
                                                 <th>S.no#</th>
                                                 <th>Order Id#</th>
-                                                <th>Card Title</th>
+                                                <!-- <th>Card Title</th> -->
                                                 <th>Customer Id</th>
                                                 <th>Customer name</th>
                                                 <th>Order Price</th>
                                                 <th>Order Status</th>
+                                                <th>Order Date</th>
                                                 <th>Action</th>
                                             </tr>
                                             <tbody>
@@ -141,7 +147,7 @@
                                             <tr id="row{{ $arr->id }}">
                                                 <td>{{$i}}</td>
                                                 <td>{{$arr->order_id}}</td>
-                                                <td>{{$arr->card_title}}</td>
+                                                <!-- <td></td> -->
                                                 <td>{{$arr->customer_id}}</td>
                                                 <td>{{$arr->fname." ".$arr->lname}}</td>
                                                 <td>${{number_format($arr->total, 2)}}</td>
@@ -156,8 +162,10 @@
                                                 @else
                                                 <td>'Delivered</td>
                                                 @endif
+                                                <td> {{ date('d/m/Y', strtotime($arr->created_at))}}</td>
                                                 <td><button class="btn btn-dark p-2">
-                                                <a href="{{route('order-detail',[$arr->id])}}" class="text-white" style=" color: #FFFFFF;"><i class="fa fa-eye" ></i>View</button></a></td>                                                
+                                                <a href="{{route('order-detail',[$arr->id])}}" class="text-white" style=" color: #FFFFFF;"><i class="fa fa-eye" ></i>View</button></a>   
+                                            </td>                                                
                                             </tr>
                                             <?php $i++; ?>
                                             @endforeach
@@ -335,24 +343,7 @@
     });
    });
 
-    //  delete card
-    function check(id) {
-        if (confirm('Are you sure delete this card')) {
-            var cardid = $('.delete-card' + id).data('id');
-            $.ajax({
-                type: 'post',
-                url: "{{ route('delete.card.post') }}",
-                data: {
-                    _token: "{{csrf_token()}}",
-                    'id': cardid
 
-                },
-                success: function(data) {
-                    location.reload();
-                }
-            });
-        }
-    };
 
 
     //Active Inactive status change 

@@ -8,6 +8,9 @@
 @endsection
 
 @section('content')
+<?php
+  echo Session::get('cart');
+?>
 <div class="container login-page">
 	<div class="row background-login">
 		<div class="col-md-12 col-lg-12 m-auto">

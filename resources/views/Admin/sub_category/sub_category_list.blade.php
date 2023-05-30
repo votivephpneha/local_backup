@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{{asset('public/images/favicon.ico')}}" type="image/ico" />
+    <link rel="icon" href="{{asset('public/images/newicon.ico')}}" type="image/ico" />
 
     <title>Card Sub Category List | BirthCards</title>
 
@@ -50,6 +50,11 @@
              <div class="alert alert-success alert-block">
               <button type="button" class="close" data-dismiss="alert">×</button>
                   <strong>{{ Session::get('success')}}</strong>
+                  @php
+                  header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+                  header("Cache-Control: post-check=0, pre-check=0", false);
+                  header("Pragma: no-cache");
+                  @endphp
             </div>        
             @endif
               <div class="col-md-12 col-sm-12 col-xs-12">
